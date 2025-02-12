@@ -1,0 +1,9 @@
+# macOS Finder
+.DS_Store
+
+# NPM
+node_modules/
+
+# Distro
+dist/
+.env
