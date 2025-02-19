@@ -8,7 +8,7 @@ export interface IUser extends SharedUser {
 export const UserSchema = new Schema<IUser>({
   username: String,
   name: String,
-  password: String, // TODO: Does this need to be a different datatype?
+  password: String, // TODO: Modify for Authentication implementation
   email: String,
   emailVerified: Boolean,
 });
