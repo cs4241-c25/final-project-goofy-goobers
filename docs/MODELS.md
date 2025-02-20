@@ -5,8 +5,7 @@ Please take note of the structure that new database models follow!
 1. Mongo definitions live in the `src/backend/app/db/models` folder.
 2. Minimum viable type definitions live in `shared/models`.
 
-## Code Structure of Models
-
+## Example
 ```TS
 /* src/shared/models/Example.ts */
 // notice here we use normal TypeScript types

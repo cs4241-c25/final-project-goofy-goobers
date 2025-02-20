@@ -14,6 +14,7 @@ Please take note of the structure that routes take, as it is different from norm
 
 **NOTE:** When defining an interface to cast types onto the `req.body`, define it in `shared` so that way the frontend can also assert the submitted data is correct.
 
+## Example
 ```TS
 /* src/backend/app/routes/example.ts */
 import { Route } from '../router';
