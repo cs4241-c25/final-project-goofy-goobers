@@ -6,7 +6,7 @@ import https from 'https';
 import path from 'path';
 import session from 'express-session';
 import { getDB } from './db/init';
-import { router } from './router';
+import { registerRoutes } from './router';
 
 export const app = express();
 app.use(
@@ -18,7 +18,15 @@ app.use(
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
-app.use('/', router);
+registerRoutes()
+  .then((router) => {
+    app.use('/', router);
+  })
+  .catch((err: unknown) => {
+    console.error('Routes were not able to register.');
+    console.error(err);
+    process.exit(1);
+  });
 
 try {
   getDB(); // first call is init to guarentee return value
