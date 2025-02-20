@@ -30,15 +30,23 @@
     "node": "^20.9.0"
   },
   "scripts": {
+    "build": "rimraf -rf dist && tsc -p src/backend/tsconfig.json && webpack --config build/webpack.config.js",
     "build:be": "rimraf -rf dist/backend && tsc -p src/backend/tsconfig.json",
+    "build:fe": "webpack --config build/webpack.config.js",
+    "start": "npm run start:be",
     "start:be": "node dist/backend/app/single.js",
     "start:be:watch": "rimraf -rf dist/backend && tsc-watch -p src/backend/tsconfig.json --onSuccess \"node dist/backend/app/single.js\"",
-    "start:fe": "webpack serve --config build/webpack.config.js"
+    "start:fe": "webpack serve --config build/webpack.config.js",
+    "lint": "eslint . --cache --color",
+    "clear": "rimraf dist"
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.8",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.13.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
@@ -70,7 +78,13 @@
   },
   "dependencies": {
     "express": "^4.21.2",
+    "express-joi-validation": "^6.0.0",
+    "express-session": "^1.18.1",
+    "glob": "^11.0.1",
+    "joi": "^17.13.3",
     "mongoose": "^8.10.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.5"
