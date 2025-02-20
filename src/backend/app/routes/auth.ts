@@ -2,13 +2,14 @@ import passport from 'passport';
 import { route } from '../router';
 import Joi from 'joi';
 import { User } from '../db/models/User';
+import { ResetPayload, SignupPayload } from '../../../shared/Auth';
 
 route({
   handler: (req, res) => {
     res.status(200).json(req.user);
   },
   method: 'post',
-  route: `/api/login`,
+  route: `/api/auth/login`,
   middleware: [passport.authenticate('local')],
   validate: {
     payload: Joi.object({
@@ -25,18 +26,8 @@ route({
     });
   },
   method: 'post',
-  route: `/api/logout`,
+  route: `/api/auth/logout`,
 });
-
-interface SignupPayload {
-  username: string;
-  name: string;
-  password: string;
-  email: string;
-  confirmPassword: string;
-  securityQuestion: string;
-  securityAnswer: string;
-}
 
 route({
   handler: async (req, res) => {
@@ -67,7 +58,7 @@ route({
     });
   },
   method: 'post',
-  route: `/api/signup`,
+  route: `/api/auth/signup`,
   validate: {
     payload: Joi.object({
       username: Joi.string().required(),
@@ -80,5 +71,39 @@ route({
     })
       .with('password', 'confirmPassword')
       .with('securityQuestion', 'securityAnswer'),
+  },
+});
+
+route({
+  handler: async (req, res) => {
+    const payload = req.body as ResetPayload;
+
+    if (payload.confirmPassword !== payload.newPassword) {
+      res.status(400).json({ message: 'Password mismatch.' });
+    }
+
+    const user = await User.findOne({ username: payload.username }).exec();
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found.' });
+      return;
+    }
+
+    if (!user.validateAnswer(payload.securityAnswer)) {
+      res.status(400).json({ message: 'Invalid answer' });
+    }
+
+    user.updateOne({ password: payload.newPassword });
+    res.status(200).json({ message: 'Password successfully updated.' });
+  },
+  method: 'post',
+  route: `/api/auth/reset`,
+  validate: {
+    payload: Joi.object({
+      username: Joi.string().required(),
+      newPassword: Joi.string().required(),
+      confirmPassword: Joi.ref('password'),
+      securityAnswer: Joi.string().required(),
+    }).with('password', 'confirmPassword'),
   },
 });

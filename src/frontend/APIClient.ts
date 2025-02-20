@@ -1,4 +1,6 @@
+import { ResetPayload, SignupPayload } from '../shared/Auth';
 import { HTTPMethod } from '../shared/HTTP';
+import { User } from '../shared/models/User';
 
 interface RequestOptions<T> {
   url: string;
@@ -13,8 +15,41 @@ class RequestError extends Error {
     super(`Request failed with status code ${code}`);
   }
 }
-
 export class APIClient {
+  public async reset(payload: ResetPayload) {
+    await this.request({
+      url: `/api/auth/reset`,
+      method: `post`,
+      payload,
+    });
+  }
+
+  public async signup(payload: SignupPayload) {
+    await this.request({
+      url: `/api/auth/signup`,
+      method: `post`,
+      payload,
+    });
+  }
+
+  public async authenticate(username: string, password: string) {
+    return await this.request<User>({
+      url: `/api/auth/login`,
+      method: 'post',
+      payload: {
+        username,
+        password,
+      },
+    });
+  }
+
+  public async logout() {
+    await this.request({
+      url: `/api/auth/logout`,
+      method: 'post',
+    });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   public async request<T extends object | void = void>(
     opts: RequestOptions<object | undefined> | string,
