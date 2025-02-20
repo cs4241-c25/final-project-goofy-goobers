@@ -1,4 +1,4 @@
-POST http://localhost:8081/api/auth/signup
+POST http://localhost:8082/api/auth/signup
 {
     "username": "gompei",
     "name": "Gompei Kuwada",

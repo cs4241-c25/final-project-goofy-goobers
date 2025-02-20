@@ -1,4 +1,4 @@
-POST http://localhost:8081/api/auth/reset
+POST http://localhost:8082/api/auth/reset
 {
     "username": "gompei",
     "newPassword": "salisbury",

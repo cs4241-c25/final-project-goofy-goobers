@@ -1,4 +1,4 @@
-POST http://localhost:8081/api/auth/login
+POST http://localhost:8082/api/auth/login
 {
     "username": "gompei",
     "password": "salisbury"
