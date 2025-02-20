@@ -18,7 +18,8 @@ interface IUserMethods {
 type UserModel = Model<IUser, {}, IUserMethods>;
 
 export const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
-  username: String,
+  // TODO: How to handle when Mongoose inevitably throws an error if a username already exists?
+  username: { type: String, unique: true },
   name: String,
   password: Schema.Types.Buffer,
   salt: Schema.Types.Buffer,
