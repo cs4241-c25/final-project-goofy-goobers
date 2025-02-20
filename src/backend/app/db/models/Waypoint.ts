@@ -5,6 +5,7 @@ export type IWaypoint = SharedWaypoint;
 
 export const WaypointSchema = new Schema<IWaypoint>({
   name: String,
+  description: String,
   longitude: Number,
   latitude: Number,
 });
