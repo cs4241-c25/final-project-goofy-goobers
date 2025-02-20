@@ -1,4 +1,4 @@
-type HTTPMethod = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
+import { HTTPMethod } from '../shared/HTTP';
 
 interface RequestOptions<T> {
   url: string;

@@ -3,9 +3,22 @@ import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import https from 'https';
+import path from 'path';
+import session from 'express-session';
 import { getDB } from './db/init';
+import { router } from './router';
 
-const app = express();
+export const app = express();
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET ?? 'gompei',
+  }),
+);
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../../frontend')));
+
+app.use('/', router);
 
 try {
   getDB(); // first call is init to guarentee return value

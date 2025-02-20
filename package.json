@@ -38,7 +38,10 @@
   "devDependencies": {
     "@popperjs/core": "^2.11.8",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.13.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
@@ -70,7 +73,12 @@
   },
   "dependencies": {
     "express": "^4.21.2",
+    "express-joi-validation": "^6.0.0",
+    "express-session": "^1.18.1",
+    "joi": "^17.13.3",
     "mongoose": "^8.10.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.5"
