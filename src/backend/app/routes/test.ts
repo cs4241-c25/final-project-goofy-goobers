@@ -6,6 +6,14 @@ export const register = (route: Route) => {
       res.status(200).json({ message: 'Hello, world!' });
     },
     method: 'get',
-    route: '/api',
+    route: '/api/test',
+  });
+
+  route({
+    handler: (req, res) => {
+      res.status(418).json({ message: "I'm a teapot" });
+    },
+    method: 'get',
+    route: '/api/test/brew',
   });
 };
