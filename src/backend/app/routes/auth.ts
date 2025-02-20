@@ -14,8 +14,8 @@ export const register = (route: Route) => {
     middleware: [passport.authenticate('local')],
     validate: {
       payload: Joi.object({
-        username: Joi.string(),
-        password: Joi.string(),
+        username: Joi.string().required(),
+        password: Joi.string().required(),
       }),
     },
   });

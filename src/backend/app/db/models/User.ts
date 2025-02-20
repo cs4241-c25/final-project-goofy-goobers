@@ -28,6 +28,9 @@ export const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
 });
 
 UserSchema.pre('save', function (next): void {
+  const salt = crypto.randomBytes(128);
+  this.salt = salt;
+
   const hashedPassword = crypto.pbkdf2Sync(this.password, this.salt, 31000, 32, 'sha256');
   this.password = hashedPassword;
 

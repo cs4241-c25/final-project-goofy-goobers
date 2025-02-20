@@ -48,12 +48,12 @@ export const route = (
 
   const handler: RequestHandler[] = [initHandler];
 
-  if (middleware) {
-    handler.push(...middleware);
-  }
-
   if (validate) {
     handler.push(...getValidators(validate));
+  }
+
+  if (middleware) {
+    handler.push(...middleware);
   }
 
   switch (method) {
