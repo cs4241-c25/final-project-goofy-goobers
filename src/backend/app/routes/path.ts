@@ -89,6 +89,8 @@ export const register = (route: Route) => {
         ...payload,
       });
 
+      await path.save();
+
       res.send(200);
     },
     method: 'patch',
@@ -211,6 +213,8 @@ export const register = (route: Route) => {
         ...payload,
       });
 
+      await waypoint.save();
+
       res.status(200);
     },
     method: 'post',
@@ -229,7 +233,10 @@ export const register = (route: Route) => {
   // Delete
   route({
     handler: async (req, res) => {
-      const path = await Path.findById(req.params.id).populate<{ owner: IUser }>('owner').exec();
+      const path = await Path.findById(req.params.id)
+        .populate<{ owner: IUser }>('owner')
+        .populate<{ waypoints: IWaypoint[] }>('waypoints')
+        .exec();
       const user = req.user as IUser;
 
       if (!path) {
@@ -241,6 +248,16 @@ export const register = (route: Route) => {
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
+
+      const filteredWaypoints = path.waypoints.filter(
+        (w) => w._id.toHexString() !== req.params.wid,
+      );
+
+      await path.updateOne({
+        waypoints: filteredWaypoints,
+      });
+
+      await path.save();
 
       await Waypoint.findByIdAndDelete(req.params.wid);
 
