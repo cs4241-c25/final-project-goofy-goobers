@@ -1,7 +1,12 @@
-import { Schema, model } from 'mongoose';
-import { Waypoint as SharedWaypoint } from '../../../../shared/models/Waypoint';
+import { Schema, Types, model } from 'mongoose';
 
-export type IWaypoint = SharedWaypoint;
+export interface IWaypoint {
+  _id: Types.ObjectId;
+  name: string;
+  description?: string;
+  latitude: number;
+  longitude: number;
+}
 
 export const WaypointSchema = new Schema<IWaypoint>({
   name: String,

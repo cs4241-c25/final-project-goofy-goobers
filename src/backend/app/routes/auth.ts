@@ -2,7 +2,8 @@ import passport from 'passport';
 import { Route } from '../router';
 import Joi from 'joi';
 import { User } from '../db/models/User';
-import { ResetPayload, SignupPayload } from '../../../shared/Auth';
+import { ResetPayload, SignupPayload } from '../../../shared/Payloads';
+import { requireAuthentication } from '../middleware/requireAuthentication';
 
 export const register = (route: Route) => {
   route({
@@ -27,6 +28,7 @@ export const register = (route: Route) => {
       });
     },
     method: 'post',
+    middleware: [requireAuthentication],
     route: `/api/auth/logout`,
   });
 
