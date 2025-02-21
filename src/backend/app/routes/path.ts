@@ -252,6 +252,41 @@ export const register = (route: Route) => {
   });
 
   /* End Waypoint CRUD */
+
+  route({
+    handler: async (req, res) => {
+      const user = req.user as IUser;
+      const pathsLookup = await Path.find({ owner: user._id })
+        .populate<{ owner: IUser }>('owner')
+        .populate<{ waypoints: IWaypoint[] }>('waypoints')
+        .exec();
+
+      const paths = pathsLookup.map(
+        (path) =>
+          ({
+            id: path._id.toHexString(),
+            name: path.name,
+            description: path.description,
+            waypoints: path.waypoints.map((w) => ({
+              id: w._id.toHexString(),
+              name: w.name,
+              description: w.description,
+              latitude: w.latitude,
+              longitude: w.longitude,
+            })),
+            owner: {
+              username: path.owner.username,
+            },
+          }) as SharedPath,
+      );
+
+      res.status(200).json(paths);
+    },
+    middleware: [requireAuthenticated],
+    method: 'get',
+    route: '/api/paths/me',
+  });
+
   route({
     handler: async (_req, res) => {
       const pathsLookup = await Path.find({})
@@ -281,6 +316,6 @@ export const register = (route: Route) => {
       res.status(200).json(paths);
     },
     method: 'get',
-    route: '/api/paths',
+    route: '/api/paths/all',
   });
 };
