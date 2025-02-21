@@ -14,3 +14,10 @@ export interface ResetPayload {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface WaypointPayload {
+  name: string;
+  description?: string;
+  latitude: number;
+  longitude: number;
+}

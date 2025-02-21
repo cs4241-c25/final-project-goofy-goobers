@@ -1,7 +1,8 @@
 import { Schema, model, Types } from 'mongoose';
-import { Path as SharedPath } from '../../../../shared/models/Path';
 
-export interface IPath extends SharedPath {
+export interface IPath {
+  name: string;
+  description?: string;
   owner: Types.ObjectId;
   waypoints: Types.ObjectId[];
 }

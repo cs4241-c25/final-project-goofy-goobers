@@ -1,8 +1,9 @@
-import { Model, Schema, model } from 'mongoose';
+import { Model, Schema, Types, model } from 'mongoose';
 import crypto from 'crypto';
 import { User as SharedUser } from '../../../../shared/models/User';
 
 export interface IUser extends SharedUser {
+  _id: Types.ObjectId;
   salt: Buffer;
   password: Buffer;
   securityQuestion: string;
