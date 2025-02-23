@@ -15,6 +15,28 @@ class RequestError extends Error {
     super(`Request failed with status code ${code}`);
   }
 }
+
+interface APIErrorProps {
+  readonly code: number;
+  readonly json: object;
+}
+
+// TODO: Make sure this is handled and used properly!
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+class APIError extends Error {
+  public override name = 'APIError';
+  public constructor(public readonly props: APIErrorProps) {
+    super(`API Request failed with status code ${props.code}, got: ${JSON.stringify(props.json)}`);
+  }
+}
+
+export class AuthenticationError extends RequestError {
+  public override name = 'AuthenticationError';
+  public constructor(public readonly code: number) {
+    super(code);
+  }
+}
+
 export class APIClient {
   public async reset(payload: ResetPayload) {
     await this.request({
@@ -79,8 +101,16 @@ export class APIClient {
 
     let parsedResponse: unknown;
 
-    if (body !== '') {
-      parsedResponse = JSON.parse(body, restoreDate) as unknown;
+    try {
+      if (body !== '') {
+        parsedResponse = JSON.parse(body, restoreDate) as unknown;
+      }
+    } catch (error) {
+      if (error instanceof SyntaxError && isAuthenticationError(body, status)) {
+        throw new AuthenticationError(status);
+      }
+
+      throw error;
     }
 
     if (status >= 200 && status <= 299) {
@@ -101,4 +131,12 @@ const restoreDate = (_key: string, value: unknown) => {
   }
 
   return value;
+};
+
+const isAuthenticationError = (body: string, status: number) => {
+  if (status === 401 && body === 'Unauthorized') {
+    return true;
+  }
+
+  return false;
 };
