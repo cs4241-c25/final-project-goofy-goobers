@@ -88,13 +88,6 @@ export const registerRoutes = async (): Promise<ExpressRouter> => {
   const router = ExpressRouter();
   const validator = createValidator();
 
-  // in production, route the bundled html
-  if (process.env.NODE_ENV === 'production') {
-    router.route('/').get((_req, res) => {
-      res.sendFile('index.html');
-    });
-  }
-
   const superficialRouter = (options: RouterOptions): void => {
     route(options, router, validator);
   };
