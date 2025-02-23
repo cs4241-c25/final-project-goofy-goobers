@@ -87,12 +87,6 @@ export const registerRoutes = async (): Promise<ExpressRouter> => {
   const router = ExpressRouter();
   const validator = createValidator();
 
-  // for production, route react
-  // TODO: only route if env var is set for prod
-  router.route('/').get((_req, res) => {
-    res.sendFile('index.html');
-  });
-
   const superficialRouter = (options: RouterOptions): void => {
     route(options, router, validator);
   };

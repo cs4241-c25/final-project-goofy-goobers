@@ -7,11 +7,13 @@ const { hostname } = require('os');
 
 const dir = path.join(__dirname, '../');
 
+const prod = process.env.NODE_ENV === 'production';
+
 module.exports = {
   context: path.join(dir, 'src/frontend'),
   devtool: 'source-map',
   entry: './index.tsx',
-  mode: 'development',
+  mode: prod ? 'production' : 'development',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     symlinks: false,
@@ -21,6 +23,17 @@ module.exports = {
     filename: '[name].[contenthash].js',
     path: path.join(dir, 'dist/frontend'),
   },
+  optimization: prod
+    ? {
+        minimize: true,
+        runtimeChunk: 'single',
+        splitChunks: {
+          chunks: 'all',
+        },
+      }
+    : {
+        minimize: false,
+      },
   devServer: {
     allowedHosts: ['localhost', hostname().toLowerCase(), 'host.docker.internal'],
     headers: {

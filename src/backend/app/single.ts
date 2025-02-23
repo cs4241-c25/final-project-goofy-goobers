@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import 'dotenv/config';
 import express from 'express';
-import http from 'http';
-import https from 'https';
 import path from 'path';
 import session from 'express-session';
 import { getDB } from './db/init';
@@ -39,10 +36,7 @@ try {
 }
 
 const port = process.env.PORT ?? '8081';
-const useHTTPS = port === '443' || (process.env.HTTPS ?? 'false') === 'true';
 
-if (useHTTPS) {
-  https.createServer({}, app).listen(port);
-} else {
-  http.createServer(app).listen(port);
-}
+app.listen(port, () => {
+  console.log('Server is running!');
+});

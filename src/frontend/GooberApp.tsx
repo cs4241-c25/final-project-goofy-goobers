@@ -4,6 +4,8 @@ import { User } from '../shared/models/User';
 import { Container } from 'reactstrap';
 import { Route, Routes } from 'react-router-dom';
 import { LoginPage } from './containers/LoginPage';
+import { NotFound } from './containers/NotFound';
+import { HomePage } from './containers/HomePage';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -13,6 +15,8 @@ export const App: FC = () => {
       <Container>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>
     </UserContext.Provider>

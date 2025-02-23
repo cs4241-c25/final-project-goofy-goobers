@@ -27,10 +27,11 @@ export const register = (route: Route) => {
   });
 
   route({
-    handler: (req) => {
+    handler: (req, res) => {
       req.logout((err) => {
         console.error(err);
       });
+      res.redirect('/');
     },
     method: 'post',
     middleware: [requireAuthenticated],
