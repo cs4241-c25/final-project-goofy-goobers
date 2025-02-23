@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 
 
 export const BackButton: FC = () => {
@@ -8,7 +9,7 @@ export const BackButton: FC = () => {
   console.log(url);
 
   return <Link to={"/"}>
-    <button>Back</button>
+    <Button>Back</Button>
   </Link>;
 
 };

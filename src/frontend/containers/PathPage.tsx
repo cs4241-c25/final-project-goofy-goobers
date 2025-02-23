@@ -48,13 +48,12 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      <h1>cool guy</h1>
+      <h1>You are at the path called {pathid}</h1>
       {waypointArray.map(waypoint =>
-        <h1>{waypoint.longitude}</h1>
+        <h2>{waypoint.longitude}</h2>
       )}
-      {editModeFlag?
+      {editModeFlag ?
         <>
-          <Button onClick={handleEditMode}>Cancel</Button>
           <EditWaypoint setEditModeFlag={setEditModeFlag} />
         </>
         :
