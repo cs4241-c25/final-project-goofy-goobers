@@ -22,7 +22,7 @@ export const register = (route: Route) => {
 
       await newPath.save();
 
-      res.send(201).json({ id: newPath._id.toHexString() });
+      res.status(201).json({ id: newPath._id.toHexString() });
     },
     method: 'post',
     route: '/api/path',
@@ -59,6 +59,7 @@ export const register = (route: Route) => {
           description: w.description,
           latitude: w.latitude,
           longitude: w.longitude,
+          path: w._id.toHexString(),
         })),
       };
 
@@ -80,7 +81,10 @@ export const register = (route: Route) => {
         return;
       }
 
-      if (path.owner._id !== user._id) {
+      if (!path.owner._id.equals(user._id)) {
+        console.log(
+          `Illegal access attempted: ${user._id} attempted to access ${path.owner._id}'s path!`,
+        );
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
@@ -119,7 +123,7 @@ export const register = (route: Route) => {
         return;
       }
 
-      if (pathLookup.owner._id !== user._id) {
+      if (!pathLookup.owner._id.equals(user._id)) {
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
@@ -132,9 +136,10 @@ export const register = (route: Route) => {
       // delete path
       await pathLookup.deleteOne();
 
-      res.status(204);
+      res.sendStatus(204);
     },
     method: 'delete',
+    middleware: [requireAuthenticated],
     route: `/api/path/:id`,
   });
 
@@ -153,7 +158,7 @@ export const register = (route: Route) => {
         return;
       }
 
-      if (path.owner._id !== user._id) {
+      if (!path.owner._id.equals(user._id)) {
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
@@ -162,10 +167,16 @@ export const register = (route: Route) => {
 
       const newWaypoint = await Waypoint.create({
         ...payload,
+        path: path._id,
       });
+
       await newWaypoint.save();
 
-      path.waypoints.push(newWaypoint._id);
+      await path.updateOne({
+        waypoints: [...path.waypoints, newWaypoint._id],
+      });
+
+      await path.save();
 
       res.status(201).json({ id: newWaypoint._id.toHexString() });
     },
@@ -195,14 +206,14 @@ export const register = (route: Route) => {
         return;
       }
 
-      if (path.owner._id !== user._id) {
+      if (!path.owner._id.equals(user._id)) {
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
 
       const waypoint = await Waypoint.findById(req.params.wid).exec();
 
-      if (!waypoint) {
+      if (!waypoint || !waypoint.path.equals(path._id)) {
         res.status(404).json({ error: 'Waypoint not found.' });
         return;
       }
@@ -211,11 +222,12 @@ export const register = (route: Route) => {
 
       await waypoint.updateOne({
         ...payload,
+        path: path._id,
       });
 
       await waypoint.save();
 
-      res.status(200);
+      res.sendStatus(200);
     },
     method: 'post',
     middleware: [requireAuthenticated],
@@ -244,7 +256,7 @@ export const register = (route: Route) => {
         return;
       }
 
-      if (path.owner._id !== user._id) {
+      if (!path.owner._id.equals(user._id)) {
         res.status(403).json({ error: 'You do not own this Path.' });
         return;
       }
@@ -261,7 +273,7 @@ export const register = (route: Route) => {
 
       await Waypoint.findByIdAndDelete(req.params.wid);
 
-      res.status(204);
+      res.sendStatus(204);
     },
     method: 'delete',
     middleware: [requireAuthenticated],

@@ -4,4 +4,5 @@ export interface Waypoint {
   description?: string;
   latitude: number;
   longitude: number;
+  path: string;
 }

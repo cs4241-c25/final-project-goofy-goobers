@@ -6,6 +6,7 @@ export interface IWaypoint {
   description?: string;
   latitude: number;
   longitude: number;
+  path: Types.ObjectId;
 }
 
 export const WaypointSchema = new Schema<IWaypoint>({
@@ -13,6 +14,7 @@ export const WaypointSchema = new Schema<IWaypoint>({
   description: String,
   longitude: Number,
   latitude: Number,
+  path: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 export const Waypoint = model<IWaypoint>('Waypoint', WaypointSchema);

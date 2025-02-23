@@ -18,6 +18,7 @@ export const register = (route: Route) => {
         description: waypointLookup.description,
         longitude: waypointLookup.longitude,
         latitude: waypointLookup.latitude,
+        path: waypointLookup.path._id.toHexString(),
       };
 
       res.status(200).json(waypoint);

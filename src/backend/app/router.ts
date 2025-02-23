@@ -84,9 +84,7 @@ export const registerRoutes = async (): Promise<ExpressRouter> => {
   const paths = await glob(path.join(__dirname, 'routes', '/**/!(index|*.test).js'), {
     windowsPathsNoEscape: true,
   });
-
   const router = ExpressRouter();
-
   const validator = createValidator();
 
   // for production, route react
