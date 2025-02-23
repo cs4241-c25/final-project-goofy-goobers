@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Waypoint } from '../../shared/models/Waypoint.ts';
 import { useParams } from "react-router";
-import { NewPathButton } from '../components/NewPathButton';
 import { BackButton } from '../components/BackButton';
 import { AddWaypointButton } from '../components/AddWaypointButton';
 import { EditWaypoint } from '../components/EditWaypoint';
