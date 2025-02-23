@@ -21,6 +21,14 @@ app.use(express.static(path.join(__dirname, '../../frontend')));
 
 registerAuth(app);
 
+// in production, route the bundled html
+if (process.env.NODE_ENV === 'production') {
+  console.log('WARNING: Running in PRODUCTION MODE, all undefined routes will go to index.html');
+  app.route('*').get((_req, res) => {
+    res.sendFile('index.html', { root: path.join(__dirname, '../../frontend') });
+  });
+}
+
 registerRoutes()
   .then((router) => {
     app.use('/', router);
@@ -30,14 +38,6 @@ registerRoutes()
     console.error(err);
     process.exit(1);
   });
-
-// in production, route the bundled html
-if (process.env.NODE_ENV === 'production') {
-  console.log('WARNING: Running in PRODUCTION MODE, all undefined routes will go to index.html');
-  app.route('*').get((_req, res) => {
-    res.sendFile('index.html', { root: path.join(__dirname, '../../frontend') });
-  });
-}
 
 try {
   getDB(); // first call is init to guarentee return value
