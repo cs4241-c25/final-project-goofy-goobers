@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { LoginPage } from './containers/LoginPage';
 import { NotFound } from './containers/NotFound';
 import { HomePage } from './containers/HomePage';
-import { CreatePage} from "./containers/CreatePage";
+import { CreatePage } from './containers/CreatePage';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);

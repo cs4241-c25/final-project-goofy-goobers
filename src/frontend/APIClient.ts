@@ -1,4 +1,5 @@
 import { HTTPMethod } from '../shared/HTTP';
+import { Path } from '../shared/models/Path';
 import { User } from '../shared/models/User';
 import { ResetPayload, SignupPayload } from '../shared/Payloads';
 
@@ -47,6 +48,17 @@ export class APIClient {
     await this.request({
       url: `/api/auth/logout`,
       method: 'post',
+    });
+  }
+
+  public async createPath(name: string, description?: string) {
+    return await this.request<Path>({
+      url: `/api/path`,
+      method: 'post',
+      payload: {
+        name,
+        description,
+      },
     });
   }
 
