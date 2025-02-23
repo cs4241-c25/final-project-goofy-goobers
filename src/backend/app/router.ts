@@ -4,7 +4,6 @@ import { Schema } from 'joi';
 import { createValidator, ExpressJoiInstance } from 'express-joi-validation';
 import { glob } from 'glob';
 import path from 'path';
-import 'dotenv/config';
 
 interface Validator {
   query?: Schema;
