@@ -4,6 +4,7 @@ import { Schema } from 'joi';
 import { createValidator, ExpressJoiInstance } from 'express-joi-validation';
 import { glob } from 'glob';
 import path from 'path';
+import 'dotenv/config';
 
 interface Validator {
   query?: Schema;
@@ -87,11 +88,12 @@ export const registerRoutes = async (): Promise<ExpressRouter> => {
   const router = ExpressRouter();
   const validator = createValidator();
 
-  // for production, route react
-  // TODO: only route if env var is set for prod
-  router.route('/').get((_req, res) => {
-    res.sendFile('index.html');
-  });
+  // in production, route the bundled html
+  if (process.env.NODE_ENV === 'production') {
+    router.route('/').get((_req, res) => {
+      res.sendFile('index.html');
+    });
+  }
 
   const superficialRouter = (options: RouterOptions): void => {
     route(options, router, validator);
