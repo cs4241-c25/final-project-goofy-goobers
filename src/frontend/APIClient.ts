@@ -1,6 +1,6 @@
-import { ResetPayload, SignupPayload } from '../shared/Auth';
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
+import { ResetPayload, SignupPayload } from '../shared/Payloads';
 
 interface RequestOptions<T> {
   url: string;
