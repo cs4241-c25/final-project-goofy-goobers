@@ -11,27 +11,33 @@ interface RequestOptions<T> {
 
 class RequestError extends Error {
   public override name = 'RequestError';
-  public constructor(public readonly code: number) {
-    super(`Request failed with status code ${code}`);
+  public constructor(
+    public readonly code: number,
+    public readonly note?: string,
+  ) {
+    super(`Request failed with status code ${code}${note && ` : ${note}`}`);
   }
 }
 
-interface APIErrorProps {
-  readonly code: number;
-  readonly json: object;
-}
-
-// TODO: Make sure this is handled and used properly!
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class APIError extends Error {
+export class APIError extends RequestError {
   public override name = 'APIError';
-  public constructor(public readonly props: APIErrorProps) {
-    super(`API Request failed with status code ${props.code}, got: ${JSON.stringify(props.json)}`);
+  public constructor(
+    public readonly code: number,
+    public readonly body?: { message?: string },
+  ) {
+    super(code, body?.message);
   }
 }
 
 export class AuthenticationError extends RequestError {
   public override name = 'AuthenticationError';
+  public constructor(public readonly code: number) {
+    super(code);
+  }
+}
+
+export class ServerError extends RequestError {
+  public override name = 'ServerError';
   public constructor(public readonly code: number) {
     super(code);
   }
@@ -115,6 +121,14 @@ export class APIClient {
 
     if (status >= 200 && status <= 299) {
       return parsedResponse as T;
+    }
+
+    if (status >= 400 && status <= 499) {
+      throw new APIError(status, parsedResponse as object);
+    }
+
+    if (status >= 500 && status <= 500) {
+      throw new ServerError(status);
     }
 
     throw new RequestError(status);
