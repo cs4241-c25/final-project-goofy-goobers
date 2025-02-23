@@ -50,6 +50,10 @@ export class APIClient {
     });
   }
 
+  public async poll() {
+    return await this.request<User>(`/api/user/current`);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   public async request<T extends object | void = void>(
     opts: RequestOptions<object | undefined> | string,
