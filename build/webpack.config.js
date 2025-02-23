@@ -21,6 +21,9 @@ module.exports = {
     filename: '[name].[contenthash].js',
     path: path.join(dir, 'dist/frontend'),
   },
+  optimization: {
+    minimize: false,
+  },
   devServer: {
     allowedHosts: ['localhost', hostname().toLowerCase(), 'host.docker.internal'],
     headers: {
