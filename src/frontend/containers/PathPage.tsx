@@ -1,15 +1,21 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Waypoint } from '../../shared/models/Waypoint.ts';
 import { useParams } from "react-router";
 import { NewPathButton } from '../components/NewPathButton';
 import { BackButton } from '../components/BackButton';
 import { AddWaypointButton } from '../components/AddWaypointButton';
 import { EditWaypoint } from '../components/EditWaypoint';
+import { Button } from 'reactstrap';
+
 
 export const PathPage: FC = () => {
 
+  const [editModeFlag, setEditModeFlag] = useState(false);
 
-
+  const handleEditMode = (e) => {
+    e.preventDefault()
+    setEditModeFlag(!editModeFlag);
+  }
 
   const waypointArray: Waypoint[] = [
     {
@@ -47,9 +53,18 @@ export const PathPage: FC = () => {
       {waypointArray.map(waypoint =>
         <h1>{waypoint.longitude}</h1>
       )}
-      <BackButton />
-      <AddWaypointButton />
-      <EditWaypoint />
+      {editModeFlag?
+        <>
+          <Button onClick={handleEditMode}>Cancel</Button>
+          <EditWaypoint setEditModeFlag={setEditModeFlag} />
+        </>
+        :
+        <>
+          <BackButton />
+          <AddWaypointButton />
+          <Button onClick={handleEditMode}>Edit</Button>
+        </>
+      }
     </>
   );
 };
