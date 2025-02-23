@@ -46,7 +46,7 @@ export const route = (
 
   const { route, method, middleware, handler: initHandler, validate } = opts;
 
-  const handler: RequestHandler[] = [initHandler];
+  const handler: RequestHandler[] = [];
 
   if (validate) {
     handler.push(...getValidators(validate));
@@ -55,6 +55,8 @@ export const route = (
   if (middleware) {
     handler.push(...middleware);
   }
+
+  handler.push(initHandler);
 
   switch (method) {
     case 'delete':
@@ -82,9 +84,7 @@ export const registerRoutes = async (): Promise<ExpressRouter> => {
   const paths = await glob(path.join(__dirname, 'routes', '/**/!(index|*.test).js'), {
     windowsPathsNoEscape: true,
   });
-
   const router = ExpressRouter();
-
   const validator = createValidator();
 
   // for production, route react

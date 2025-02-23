@@ -2,27 +2,35 @@
 Please take note of the structure that new database models follow!
 
 ## Locations
-1. Mongo definitions live in the `src/backend/app/db/models` folder.
-2. Minimum viable type definitions live in `shared/models`.
+1. Backend type definitions & their Mongo models live in the `src/backend/app/db/models` folder.
+2. Frontend type definitions live in `shared/models`. This is so we can convert to them when returning from the API.
 
 ## Example
 ```TS
 /* src/shared/models/Example.ts */
 // notice here we use normal TypeScript types
+
+interface ExampleOwner {
+  username: string;
+  profilePictureURL?: string;
+}
+
 export interface Example {
+  id: string;
   name: string;
   tags: string[];
+  owner: ExampleOwner;
 }
 ```
 
 ```TS
 /* src/backend/app/db/models/Example.ts */
 import { Schema, model, Types } from 'mongoose';
-import { Example as SharedExample } from '../../../../shared/models/Example';
 
-// by extending the SharedExample, we enforce accuracy in the shared type so the front end will know what to expect
-// additionally, we follow C#'s standard of prefixing interfaces with a capital I
-export interface IExample extends SharedExample {
+// we follow C#'s standard of prefixing interfaces with a capital I
+export interface IExample {
+  name: string;
+  tags: string[]
   owner: Types.ObjectId;
 }
 
