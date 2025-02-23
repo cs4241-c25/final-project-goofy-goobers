@@ -46,7 +46,7 @@ export const route = (
 
   const { route, method, middleware, handler: initHandler, validate } = opts;
 
-  const handler: RequestHandler[] = [initHandler];
+  const handler: RequestHandler[] = [];
 
   if (validate) {
     handler.push(...getValidators(validate));
@@ -55,6 +55,8 @@ export const route = (
   if (middleware) {
     handler.push(...middleware);
   }
+
+  handler.push(initHandler);
 
   switch (method) {
     case 'delete':
