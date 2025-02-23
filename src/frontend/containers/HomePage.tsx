@@ -1,9 +1,39 @@
 import React, { FC } from 'react';
+import { Path } from '../../shared/models/Path';
+import { Link } from 'react-router-dom';
+import { NewPathButton } from '../components/NewPathButton';
 
 export const HomePage: FC = () => {
+  const pathArray: Path[] = [
+    {
+      id: "1",
+      name: "Pathy",
+      description: "This is the first path",
+      owner: { username: "Jeff"},
+      waypoints: []
+    },
+    {
+      id: "2",
+      name: "Pathie",
+      description: "This is the second path!!!!!",
+      owner: { username: "Jeff"},
+      waypoints: []
+    },
+    {
+      id: "3",
+      name: "Pathological",
+      description: "This is the third path (belongs to jill)!!!!!",
+      owner: { username: "Jill"},
+      waypoints: []
+    }
+  ]
+
   return (
     <>
+      {pathArray.map(path =>
+        <Link to={"/view-path/" + path.id}>{path.name}</Link>)}
       <h1>Hello, world! You are on / via React Router.</h1>
+      <NewPathButton />
     </>
   );
 };
