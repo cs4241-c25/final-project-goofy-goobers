@@ -7,6 +7,7 @@ import path from 'path';
 import session from 'express-session';
 import { getDB } from './db/init';
 import { registerRoutes } from './router';
+import { registerAuth } from './server/auth';
 
 export const app = express();
 app.use(
@@ -17,6 +18,8 @@ app.use(
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../frontend')));
+
+registerAuth(app);
 
 registerRoutes()
   .then((router) => {
