@@ -1,14 +1,19 @@
 import passport from 'passport';
 import { Route } from '../router';
 import Joi from 'joi';
-import { User } from '../db/models/User';
+import { IUser, User } from '../db/models/User';
 import { ResetPayload, SignupPayload } from '../../../shared/Payloads';
 import { requireAuthenticated } from '../middleware/requireAuthentication';
 
 export const register = (route: Route) => {
   route({
     handler: (req, res) => {
-      res.status(200).json(req.user);
+      const user = req.user as IUser;
+      res.status(200).json({
+        username: user.username,
+        email: user.email,
+        name: user.name,
+      });
     },
     method: 'post',
     route: `/api/auth/login`,
