@@ -5,6 +5,23 @@ import { Route } from '../router';
 
 export const register = (route: Route) => {
   route({
+    handler: (req, res) => {
+      const userLookup = req.user as IUser;
+
+      const user: SharedUser = {
+        username: userLookup.username,
+        name: userLookup.name,
+        email: userLookup.email,
+      };
+
+      res.json(user);
+    },
+    middleware: [requireAuthenticated],
+    method: 'get',
+    route: '/api/profile/current',
+  });
+
+  route({
     handler: async (req, res) => {
       const userLookup = await User.findById(req.params.id).exec();
 
@@ -23,22 +40,5 @@ export const register = (route: Route) => {
     },
     method: 'get',
     route: '/api/profile/:id',
-  });
-
-  route({
-    handler: (req, res) => {
-      const userLookup = req.user as IUser;
-
-      const user: SharedUser = {
-        username: userLookup.username,
-        name: userLookup.name,
-        email: userLookup.email,
-      };
-
-      res.send(200).json(user);
-    },
-    middleware: [requireAuthenticated],
-    method: 'get',
-    route: '/api/profile/current',
   });
 };
