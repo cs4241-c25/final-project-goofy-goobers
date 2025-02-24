@@ -19,9 +19,18 @@ export const CreatePage: FC = () => {
   };
 
   //creates new path and route to new page
-  const clickCreate = async () => {
-    await api.createPath(path.name, path.description); //call to create path endpoint
-    //route to edit page
+  const clickCreate = () => {
+    console.log('Create Clicked');
+    api
+      .createPath(path.name, path.description) //call to create path endpoint
+      .then((path) => {
+        console.log('path name: ' + path.name);
+        //route to new page
+      })
+      .catch((error: unknown) => {
+        //catch error will be handled later
+        console.log(error);
+      });
   };
 
   return (
@@ -46,10 +55,9 @@ export const CreatePage: FC = () => {
           }}
         ></Input>
         <Button
-          type={'submit'}
           id={'createButton'}
-          onClick={() => async () => {
-            await clickCreate();
+          onClick={() => {
+            clickCreate();
           }}
         >
           Create
