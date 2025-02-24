@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 // import { Path } from '../../shared/models/Path';
 import { Button, Form, Input, Label } from 'reactstrap';
-import { redirect } from "react-router-dom";
+import { redirect } from 'react-router-dom';
 
 export const CreatePage: FC = () => {
   const [path, setPath] = useState({
