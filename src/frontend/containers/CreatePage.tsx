@@ -1,9 +1,12 @@
 import React, { FC, useState } from 'react';
 // import { Path } from '../../shared/models/Path';
 import { Button, Form, Input, Label } from 'reactstrap';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const CreatePage: FC = () => {
+
+  const navigate = useNavigate();
+
   const [path, setPath] = useState({
     name: '',
     description: '',
@@ -22,9 +25,10 @@ export const CreatePage: FC = () => {
   const clickCreate = () => {
     api
       .createPath(path.name, path.description) //call to create path endpoint
-      .then((path) => {
+      .then(async (path) => {
         //route to new page
-        redirect(`/view-path/${path.id}`);
+        console.log(path);
+        await navigate(`/view-path/${path.id}`);
       })
       .catch((error: unknown) => {
         //catch error will be handled later
