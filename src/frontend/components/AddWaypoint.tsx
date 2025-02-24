@@ -2,21 +2,20 @@ import React, { FC, useState } from 'react';
 import { Button } from 'reactstrap';
 import { Waypoint } from '../../shared/models/Waypoint';
 
-interface EditWaypointProps {
-  setEditModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
+interface AddWaypointProps {
+  setAddModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
 }
 
-export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
-  const [id, setId] = useState('');
+export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
 
-  const handleEditMode = (e: { preventDefault: () => void }) => {
+  const handleAddMode = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (setEditModeFlag) {
-      setEditModeFlag(false);
+    if (setAddModeFlag) {
+      setAddModeFlag(false);
     }
   };
 
@@ -24,12 +23,12 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
     e.preventDefault();
     try {
       const waypoint: Waypoint = {
-        id: id,
+        id: '',
         name: name,
         description: description,
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
-        path: '', // default value, want to not send it as I think it may be redundant to do so
+        path: '' // default value, want to not send it as I think it may be redundant to do so
       };
       console.log('Waypoint:', waypoint);
       // TODO - make api call to save waypoint
@@ -43,20 +42,6 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
   //number.parseFloat
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="id">Chose the Waypoint: </label>
-      <select
-        id="id"
-        name="id"
-        onChange={(e) => {
-          setId(e.target.value);
-        }}
-      >
-        {/* todo: map api call with the value being id and name being name */}
-        <option value="1">Wavy</option>
-      </select>
-
-      <br />
-
       <label htmlFor="name">Name: </label>
       <input
         type="text"
@@ -109,7 +94,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <br />
 
-      <Button onClick={handleEditMode}>Cancel</Button>
+      <Button onClick={handleAddMode}>Cancel</Button>
       <Button>Save</Button>
     </form>
   );
