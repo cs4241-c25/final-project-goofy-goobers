@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Path } from '../../shared/models/Path';
 import { Link } from 'react-router-dom';
 import { NewPathButton } from '../components/NewPathButton';
+import { PathLink } from '../components/PathLink';
 
 export const HomePage: FC = () => {
   const pathArray: Path[] = [
@@ -31,7 +32,8 @@ export const HomePage: FC = () => {
   return (
     <>
       {pathArray.map(path =>
-        <Link to={"/view-path/" + path.id}>{path.name}</Link>)}
+        <PathLink path={path}/>
+      )}
       <h1>Hello, world! You are on / via React Router.</h1>
       <NewPathButton />
     </>
