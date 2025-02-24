@@ -11,10 +11,38 @@ interface RequestOptions<T> {
 
 class RequestError extends Error {
   public override name = 'RequestError';
-  public constructor(public readonly code: number) {
-    super(`Request failed with status code ${code}`);
+  public constructor(
+    public readonly code: number,
+    public readonly note?: string,
+  ) {
+    super(`Request failed with status code ${code}${note && ` : ${note}`}`);
   }
 }
+
+export class APIError extends RequestError {
+  public override name = 'APIError';
+  public constructor(
+    public readonly code: number,
+    public readonly body?: { message?: string },
+  ) {
+    super(code, body?.message);
+  }
+}
+
+export class AuthenticationError extends RequestError {
+  public override name = 'AuthenticationError';
+  public constructor(public readonly code: number) {
+    super(code);
+  }
+}
+
+export class ServerError extends RequestError {
+  public override name = 'ServerError';
+  public constructor(public readonly code: number) {
+    super(code);
+  }
+}
+
 export class APIClient {
   public async reset(payload: ResetPayload) {
     await this.request({
@@ -50,6 +78,10 @@ export class APIClient {
     });
   }
 
+  public async poll() {
+    return await this.request<User>(`/api/profile/current`);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   public async request<T extends object | void = void>(
     opts: RequestOptions<object | undefined> | string,
@@ -75,12 +107,28 @@ export class APIClient {
 
     let parsedResponse: unknown;
 
-    if (body !== '') {
-      parsedResponse = JSON.parse(body, restoreDate) as unknown;
+    try {
+      if (body !== '') {
+        parsedResponse = JSON.parse(body, restoreDate) as unknown;
+      }
+    } catch (error) {
+      if (error instanceof SyntaxError && isAuthenticationError(body, status)) {
+        throw new AuthenticationError(status);
+      }
+
+      throw error;
     }
 
     if (status >= 200 && status <= 299) {
       return parsedResponse as T;
+    }
+
+    if (status >= 400 && status <= 499) {
+      throw new APIError(status, parsedResponse as object);
+    }
+
+    if (status >= 500 && status <= 500) {
+      throw new ServerError(status);
     }
 
     throw new RequestError(status);
@@ -97,4 +145,12 @@ const restoreDate = (_key: string, value: unknown) => {
   }
 
   return value;
+};
+
+const isAuthenticationError = (body: string, status: number) => {
+  if (status === 401 && body === 'Unauthorized') {
+    return true;
+  }
+
+  return false;
 };
