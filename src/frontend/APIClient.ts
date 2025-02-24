@@ -116,6 +116,10 @@ export class APIClient {
         throw new AuthenticationError(status);
       }
 
+      if (error instanceof SyntaxError && isInternalServerError(body, status)) {
+        throw new ServerError(status);
+      }
+
       throw error;
     }
 
@@ -149,6 +153,14 @@ const restoreDate = (_key: string, value: unknown) => {
 
 const isAuthenticationError = (body: string, status: number) => {
   if (status === 401 && body === 'Unauthorized') {
+    return true;
+  }
+
+  return false;
+};
+
+const isInternalServerError = (body: string, status: number) => {
+  if (status >= 500 && status <= 599 && body.startsWith('Error')) {
     return true;
   }
 
