@@ -1,5 +1,6 @@
 import { User as SharedUser } from '../../../shared/models/User';
-import { User } from '../db/models/User';
+import { IUser, User } from '../db/models/User';
+import { requireAuthenticated } from '../middleware/requireAuthentication';
 import { Route } from '../router';
 
 export const register = (route: Route) => {
@@ -22,5 +23,22 @@ export const register = (route: Route) => {
     },
     method: 'get',
     route: '/api/profile/:id',
+  });
+
+  route({
+    handler: (req, res) => {
+      const userLookup = req.user as IUser;
+
+      const user: SharedUser = {
+        username: userLookup.username,
+        name: userLookup.name,
+        email: userLookup.email,
+      };
+
+      res.send(200).json(user);
+    },
+    middleware: [requireAuthenticated],
+    method: 'get',
+    route: '/api/profile/current',
   });
 };

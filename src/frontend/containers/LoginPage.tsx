@@ -1,27 +1,27 @@
 import React, { FC, useCallback, useContext } from 'react';
 import { Button } from 'reactstrap';
-import { UserContext, useUser } from '../services/providers';
+import { UserContext } from '../services/providers';
+import { redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { captureError } from '../utils';
 
 export const LoginPage: FC = () => {
   const { setUser } = useContext(UserContext);
-  const user = useUser();
 
-  const authenticate = useCallback(async () => {
-    const attempt = await api.authenticate('gompei', 'salisbury');
-
-    setUser(attempt);
+  const handleLogin = useCallback(() => {
+    api
+      .authenticate('gompei', 'salisbury')
+      .then((usr) => {
+        setUser(usr);
+        toast.success(`Logged in succesfully as ${usr.username}`);
+        redirect('/');
+      })
+      .catch(captureError);
   }, [setUser]);
 
   return (
     <>
-      <Button
-        onClick={() => {
-          void authenticate();
-        }}
-      >
-        Login
-      </Button>
-      {user && <p>You are authenticated as {user.username}</p>}
+      <Button onClick={handleLogin}>Login</Button>
     </>
   );
 };

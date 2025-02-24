@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './GooberApp';
 import { BrowserRouter } from 'react-router-dom';
 import { APIClient } from './APIClient';
+import { ToastContainer } from 'react-toastify';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById('root')!).render(
@@ -10,6 +11,7 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
+    <ToastContainer autoClose={7000} draggable newestOnTop pauseOnFocusLoss />
   </StrictMode>,
 );
 
