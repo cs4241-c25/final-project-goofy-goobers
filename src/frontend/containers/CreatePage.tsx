@@ -2,9 +2,9 @@ import React, { FC, useState } from 'react';
 // import { Path } from '../../shared/models/Path';
 import { Button, Form, Input, Label } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import { captureError } from '../utils';
 
 export const CreatePage: FC = () => {
-
   const navigate = useNavigate();
 
   const [path, setPath] = useState({
@@ -30,10 +30,7 @@ export const CreatePage: FC = () => {
         console.log(path);
         await navigate(`/view-path/${path.id}`);
       })
-      .catch((error: unknown) => {
-        //catch error will be handled later
-        console.log(error);
-      });
+      .catch(captureError);
   };
 
   return (
