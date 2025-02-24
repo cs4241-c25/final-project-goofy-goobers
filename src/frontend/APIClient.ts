@@ -79,7 +79,7 @@ export class APIClient {
   }
 
   public async poll() {
-    return await this.request<User>(`/api/user/current`);
+    return await this.request<User>(`/api/profile/current`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
