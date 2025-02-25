@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { captureError } from '../utils';
@@ -27,6 +27,16 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ close, refresh, path }) =>
 
     close();
   }, [close, description, name, path.id, refresh, waypointId]);
+
+  useEffect(() => {
+    const currentWaypoint = path.waypoints.find((wp) => wp.id === waypointId);
+    if (currentWaypoint) {
+      setName(currentWaypoint.name);
+      setDescription(currentWaypoint.description ?? '');
+      setLatitude(currentWaypoint.latitude.toString());
+      setLongitude(currentWaypoint.longitude.toString());
+    }
+  }, [path.waypoints, waypointId]);
 
   //TODO - make sure only proper Inputs allowed into latitude and longitude field
   //TODO - double check they want to delete, show all waypoint info
