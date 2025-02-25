@@ -1,77 +1,37 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Button, Form, Input, Label } from 'reactstrap';
-import { Waypoint } from '../../shared/models/Waypoint';
+import React, { FC, useCallback, useState } from 'react';
+import { Button, FormGroup, Input, Label } from 'reactstrap';
+import { Path } from '../../shared/models/Path';
 import { captureError } from '../utils';
-import { useParams } from 'react-router';
 
 interface EditWaypointProps {
-  setEditModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
-  waypointArray: Waypoint[];
-  updateWaypointArray: (updatedArray: Waypoint[]) => void;
+  close: () => void;
+  refresh: () => void;
+  path: Path;
 }
 
-export const EditWaypoint: FC<EditWaypointProps> = ({
-  setEditModeFlag,
-  waypointArray,
-  updateWaypointArray,
-}) => {
+export const EditWaypoint: FC<EditWaypointProps> = ({ close, refresh, path }) => {
   const [waypointId, setWaypointId] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
-  const { pathid } = useParams();
 
-  const handleEditMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (setEditModeFlag) {
-      setEditModeFlag(false);
-    }
-  };
+  const handleSubmit = useCallback(() => {
+    api
+      .editWaypoint(path.id, waypointId, name, description, 1, 2)
+      .then(() => {
+        refresh();
+        close();
+      })
+      .catch(captureError);
 
-  useEffect(() => {
-    const currentWaypoint = waypointArray.find((wp) => wp.id === waypointId);
-    if (currentWaypoint) {
-      setName(currentWaypoint.name);
-      setDescription(currentWaypoint.description ?? '');
-      setLatitude(currentWaypoint.latitude.toString());
-      setLongitude(currentWaypoint.longitude.toString());
-    }
-  }, [waypointArray, waypointId]);
-
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      console.log(
-        `pid:${pathid} wid:${waypointId} name:${name} des:${description} lat:${latitude} lon:${longitude}`,
-      );
-      await api.editWaypoint(pathid ?? '', waypointId, name, description, 1, 2).catch(captureError);
-
-      const updatedArray = waypointArray.map((wp) =>
-        wp.id === waypointId
-          ? {
-              ...wp,
-              name,
-              description,
-              latitude: parseFloat(latitude),
-              longitude: parseFloat(longitude),
-            }
-          : wp,
-      );
-      updateWaypointArray(updatedArray);
-    } catch (error) {
-      console.error('Error saving waypoint:', error);
-    }
-
-    if (setEditModeFlag) {
-      setEditModeFlag(false);
-    }
-  };
+    close();
+  }, [close, description, name, path.id, refresh, waypointId]);
 
   //TODO - make sure only proper Inputs allowed into latitude and longitude field
   //TODO - double check they want to delete, show all waypoint info
   return (
-    <Form onSubmit={handleSubmit}>
+    <FormGroup>
       <Label htmlFor="id">Chose the Waypoint: </Label>
       <select
         id="waypointId"
@@ -80,8 +40,10 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
           setWaypointId(e.target.value);
         }}
       >
-        <option value="">Select a waypoint</option>
-        {waypointArray.map((waypoint) => (
+        <option value="" disabled selected>
+          Select a waypoint
+        </option>
+        {path.waypoints.map((waypoint) => (
           <option key={waypoint.id} value={waypoint.id}>
             {waypoint.name}
           </option>
@@ -92,12 +54,18 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
 
       {waypointId == '' ? (
         <>
-          <Button onClick={handleEditMode}>Cancel</Button>
+          <Button
+            onClick={() => {
+              close();
+            }}
+          >
+            Cancel
+          </Button>
         </>
       ) : (
         // todo: have a way of showing the user what fields have been edited, maybe have a return to default option
         <>
-          <Label htmlFor="name">Name: </Label>
+          <Label for="name">Name: </Label>
           <Input
             type="text"
             id="name"
@@ -111,7 +79,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
 
           <br />
 
-          <Label htmlFor="description">Description: </Label>
+          <Label for="description">Description: </Label>
           <Input
             type="text"
             id="description"
@@ -125,7 +93,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
 
           <br />
 
-          <Label htmlFor="latitude">Latitude: </Label>
+          <Label for="latitude">Latitude: </Label>
           <Input
             type="text"
             id="latitude"
@@ -139,7 +107,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
 
           <br />
 
-          <Label htmlFor="longitude">Longitude: </Label>
+          <Label for="longitude">Longitude: </Label>
           <Input
             type="text"
             id="longitude"
@@ -153,10 +121,22 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
 
           <br />
 
-          <Button onClick={handleEditMode}>Cancel</Button>
-          <Button>Save</Button>
+          <Button
+            onClick={() => {
+              close();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
+            Save
+          </Button>
         </>
       )}
-    </Form>
+    </FormGroup>
   );
 };

@@ -6,6 +6,7 @@ import { IUser } from '../db/models/User';
 import { IWaypoint, Waypoint } from '../db/models/Waypoint';
 import { requireAuthenticated } from '../middleware/requireAuthentication';
 import { WaypointPayload } from '../../../shared/Payloads';
+import { Waypoint as SharedWaypoint } from '../../../shared/models/Waypoint';
 
 export const register = (route: Route) => {
   /* Start Path CRUD */
@@ -198,12 +199,8 @@ export const register = (route: Route) => {
   // Update
   route({
     handler: async (req, res) => {
-      console.log("maybe")
-
       const path = await Path.findById(req.params.id).populate<{ owner: IUser }>('owner').exec();
       const user = req.user as IUser;
-
-      console.log("something")
 
       if (!path) {
         res.status(404).json({ error: 'Path not found.' });
@@ -362,7 +359,7 @@ export const register = (route: Route) => {
         return;
       }
 
-      const sharedWaypoints = waypoints.map((wp) => ({
+      const sharedWaypoints: SharedWaypoint[] = waypoints.map((wp) => ({
         id: wp._id.toHexString(),
         name: wp.name,
         description: wp.description,
