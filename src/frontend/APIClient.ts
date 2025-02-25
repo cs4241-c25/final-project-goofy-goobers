@@ -1,7 +1,8 @@
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
-import { ResetPayload, SignupPayload } from '../shared/Payloads';
+import { ResetPayload, SignupPayload, WaypointPayload } from "../shared/Payloads";
 import { Path } from '../shared/models/Path';
+import { Waypoint } from '../shared/models/Waypoint';
 
 interface RequestOptions<T> {
   url: string;
@@ -76,6 +77,19 @@ export class APIClient {
     await this.request({
       url: `/api/auth/logout`,
       method: 'post',
+    });
+  }
+
+  public async createWaypoint(pathId: string, payload: WaypointPayload) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint`,
+      method: 'post',
+      payload: {
+        name: payload.name,
+        description: payload.description,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+      },
     });
   }
 

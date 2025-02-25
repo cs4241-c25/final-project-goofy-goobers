@@ -61,7 +61,7 @@ export const PathPage: FC = () => {
           <AddWaypoint
             close={() => {
               setAddModeFlag(false);
-            }}
+            } } pathID={pathId ?? ''}
           />
         </>
       ) : deleteModeFlag ? (

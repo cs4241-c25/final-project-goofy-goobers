@@ -1,5 +1,6 @@
 # macOS Finder
 .DS_Store
+.idea/
 
 # NPM
 node_modules/
