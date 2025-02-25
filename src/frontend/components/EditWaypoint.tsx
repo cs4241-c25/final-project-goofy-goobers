@@ -3,19 +3,23 @@ import { Button, Form, Input, Label } from 'reactstrap';
 import { Waypoint } from '../../shared/models/Waypoint';
 import { captureError } from '../utils';
 import { useParams } from 'react-router';
-import { Path } from '../../shared/models/Path';
 
 interface EditWaypointProps {
   setEditModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
+  waypointArray: Waypoint[];
+  updateWaypointArray: (updatedArray: Waypoint[]) => void;
 }
 
-export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
+export const EditWaypoint: FC<EditWaypointProps> = ({
+  setEditModeFlag,
+  waypointArray,
+  updateWaypointArray,
+}) => {
   const [waypointId, setWaypointId] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
-  const [waypointArray, setWaypointArray] = useState<Waypoint[]>([]);
   const { pathid } = useParams();
 
   const handleEditMode = (e: { preventDefault: () => void }) => {
@@ -51,48 +55,27 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
           parseFloat(longitude),
         )
         .catch(captureError);
+
+      const updatedArray = waypointArray.map((wp) =>
+        wp.id === waypointId
+          ? {
+              ...wp,
+              name,
+              description,
+              latitude: parseFloat(latitude),
+              longitude: parseFloat(longitude),
+            }
+          : wp,
+      );
+      updateWaypointArray(updatedArray);
     } catch (error) {
       console.error('Error saving waypoint:', error);
     }
-    //
-    // if (setEditModeFlag) {
-    //   setEditModeFlag(false);
-    // }
-  };
 
-  useEffect(() => {
-    async function fetchWaypoints() {
-      try {
-        setWaypointArray([]);
-        const response = await fetch(`/api/path/${pathid}`, {
-          method: 'GET',
-        });
-        const path = (await response.json()) as Path;
-        const waypoints: Waypoint[] = path.waypoints;
-        for (const item of waypoints) {
-          const waypointResponse = await fetch(`/api/waypoint/${item.id}`, {
-            method: 'GET',
-          });
-          const waypoint = (await waypointResponse.json()) as Waypoint;
-          console.log(`a waypoint was there ${waypoint.id}`);
-          setWaypointArray((prev) => {
-            const index = prev.findIndex((wp) => wp.id === waypoint.id);
-            if (index !== -1) {
-              const updatedArray = [...prev];
-              updatedArray[index] = waypoint;
-              return updatedArray;
-            }
-            return [...prev, waypoint];
-          });
-        }
-        console.log(path.waypoints);
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
+    if (setEditModeFlag) {
+      setEditModeFlag(false);
     }
-
-    void fetchWaypoints();
-  }, [pathid]);
+  };
 
   //TODO - make sure only proper Inputs allowed into latitude and longitude field
   // todo: make the dropdown for name display name but store id (have to make an api call to get all waypoints and map them as options)
@@ -122,7 +105,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
           <Button onClick={handleEditMode}>Cancel</Button>
         </>
       ) : (
-        // todo: have a way of showing the user what fields have been edited, maybe have a return to default
+        // todo: have a way of showing the user what fields have been edited, maybe have a return to default option
         <>
           <Label htmlFor="name">Name: </Label>
           <Input

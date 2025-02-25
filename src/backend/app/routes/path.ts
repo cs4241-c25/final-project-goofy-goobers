@@ -347,4 +347,31 @@ export const register = (route: Route) => {
     method: 'get',
     route: '/api/paths/all',
   });
+
+  // Read all Waypoints on a Path
+  route({
+    handler: async (req, res) => {
+      const waypoints = await Waypoint.find({ path: req.params.id }).exec();
+
+      console.log(0);
+
+      if (!waypoints.length) {
+        res.status(404).json({ error: 'Waypoint not found.' });
+        return;
+      }
+
+      const sharedWaypoints = waypoints.map((wp) => ({
+        id: wp._id.toHexString(),
+        name: wp.name,
+        description: wp.description,
+        longitude: wp.longitude,
+        latitude: wp.latitude,
+        path: wp.path._id.toHexString(),
+      }));
+
+      res.status(200).json(sharedWaypoints);
+    },
+    method: 'get',
+    route: `/api/path/:id/waypoints`,
+  });
 };

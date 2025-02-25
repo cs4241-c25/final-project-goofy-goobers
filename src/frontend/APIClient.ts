@@ -2,6 +2,7 @@ import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
 import { ResetPayload, SignupPayload } from '../shared/Payloads';
 import { Path } from '../shared/models/Path';
+import { Waypoint } from '../shared/models/Waypoint';
 
 interface RequestOptions<T> {
   url: string;
@@ -107,6 +108,13 @@ export class APIClient {
         latitude,
         longitude,
       },
+    });
+  }
+
+  public async getAllWaypointsOnPath(pathId: string) {
+    return await this.request<Waypoint[]>({
+      url: `/api/path/${pathId}/waypoints`,
+      method: 'get',
     });
   }
 

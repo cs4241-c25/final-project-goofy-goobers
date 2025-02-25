@@ -7,6 +7,7 @@ import { EditWaypoint } from '../components/EditWaypoint';
 import { DeleteWaypoint } from '../components/DeleteWaypoint';
 import { Button } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
+import { captureError } from '../utils';
 
 export const PathPage: FC = () => {
   const [editModeFlag, setEditModeFlag] = useState(false);
@@ -30,32 +31,16 @@ export const PathPage: FC = () => {
     setDeleteModeFlag(!deleteModeFlag);
   };
 
+  //todo: dont use fetch, can probably make it more efficient with a new api route
   useEffect(() => {
     async function fetchWaypoints() {
       try {
-        setWaypointArray([]);
-        const response = await fetch(`/api/path/${pathid}`, {
-          method: 'GET',
-        });
-        const path = (await response.json()) as Path;
-        const waypoints: Waypoint[] = path.waypoints;
-        for (const item of waypoints) {
-          const waypointResponse = await fetch(`/api/waypoint/${item.id}`, {
-            method: 'GET',
-          });
-          const waypoint = (await waypointResponse.json()) as Waypoint;
-          console.log(`a waypoint was there ${waypoint.id}`);
-          setWaypointArray((prev) => {
-            const index = prev.findIndex((wp) => wp.id === waypoint.id);
-            if (index !== -1) {
-              const updatedArray = [...prev];
-              updatedArray[index] = waypoint;
-              return updatedArray;
-            }
-            return [...prev, waypoint];
-          });
+        const ways = await api.getAllWaypointsOnPath(pathid ?? '').catch(captureError);
+        console.log('seems to be working');
+        console.log(ways);
+        if (typeof ways !== 'undefined') {
+          setWaypointArray(ways);
         }
-        console.log(path.waypoints);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -64,9 +49,9 @@ export const PathPage: FC = () => {
     void fetchWaypoints();
   }, [pathid]);
 
-  console.log(pathid);
-  console.log(editModeFlag);
-  console.log(addModeFlag);
+  const updateWaypointArray = (updatedArray: Waypoint[]) => {
+    setWaypointArray(updatedArray);
+  };
 
   return (
     <>
@@ -80,7 +65,11 @@ export const PathPage: FC = () => {
       ))}
       {editModeFlag ? (
         <>
-          <EditWaypoint setEditModeFlag={setEditModeFlag} />
+          <EditWaypoint
+            setEditModeFlag={setEditModeFlag}
+            waypointArray={waypointArray}
+            updateWaypointArray={updateWaypointArray}
+          />
         </>
       ) : addModeFlag ? (
         <>
@@ -88,7 +77,11 @@ export const PathPage: FC = () => {
         </>
       ) : deleteModeFlag ? (
         <>
-          <DeleteWaypoint setDeleteModeFlag={setDeleteModeFlag} />
+          <DeleteWaypoint
+            setDeleteModeFlag={setDeleteModeFlag}
+            waypointArray={waypointArray}
+            updateWaypointArray={updateWaypointArray}
+          />
         </>
       ) : (
         <>
