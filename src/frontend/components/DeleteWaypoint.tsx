@@ -33,7 +33,9 @@ export const DeleteWaypoint: FC<DeleteWaypointProps> = ({ close, refresh, path }
           setWaypointId(e.target.value);
         }}
       >
-        <option value="">Select a waypoint</option>
+        <option value="" disabled selected>
+          Select a waypoint
+        </option>
         {path.waypoints.map((waypoint) => (
           <option key={waypoint.id} value={waypoint.id}>
             {waypoint.name}
