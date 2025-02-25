@@ -6,7 +6,6 @@ import { AddWaypoint } from '../components/AddWaypoint';
 import { EditWaypoint } from '../components/EditWaypoint';
 import { DeleteWaypoint } from '../components/DeleteWaypoint';
 import { Button } from 'reactstrap';
-import { Path } from '../../shared/models/Path';
 import { captureError } from '../utils';
 
 export const PathPage: FC = () => {
@@ -31,13 +30,10 @@ export const PathPage: FC = () => {
     setDeleteModeFlag(!deleteModeFlag);
   };
 
-  //todo: dont use fetch, can probably make it more efficient with a new api route
   useEffect(() => {
     async function fetchWaypoints() {
       try {
         const ways = await api.getAllWaypointsOnPath(pathid ?? '').catch(captureError);
-        console.log('seems to be working');
-        console.log(ways);
         if (typeof ways !== 'undefined') {
           setWaypointArray(ways);
         }
@@ -56,12 +52,11 @@ export const PathPage: FC = () => {
   return (
     <>
       <h1>You are at the path called {pathid}</h1>
-      {waypointArray.map((waypoint) => (
-        <>
-          <h2 key={waypoint.name}>
-            {waypoint.name} {waypoint.longitude}
-          </h2>
-        </>
+      {waypointArray.map((wp) => (
+        // h2 is temp till we get leaflet going
+        <h2 key={wp.id}>
+          name:{wp.name} lon:{wp.longitude} lat:{wp.latitude}
+        </h2>
       ))}
       {editModeFlag ? (
         <>

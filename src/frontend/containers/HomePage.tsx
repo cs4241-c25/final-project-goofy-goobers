@@ -9,12 +9,12 @@ export const HomePage: FC = () => {
       id: '67bcf74107867d3a7129a7ba', // Make sure this is a real id on the database!
       name: 'Pathy',
       description: 'This is the first path',
-      owner: { username: 'Jeff' }, // Don't mind this field. His name is Jeff
+      owner: { username: 'Jeff' }, // His name is Jeff. Yours may not be. Dont worry. Its dumby code
       waypoints: [],
     },
     {
-      id: '2',
-      name: 'No need to click (doesnt work cause im a lazy hard coder)',
+      id: '67bbbe66ca87042588eee5fe', // Make sure this is a real id on the database!
+      name: 'No need to click (it MAY kill be)',
       description: 'This is the second path!!!!!',
       owner: { username: 'Jeff' },
       waypoints: [],

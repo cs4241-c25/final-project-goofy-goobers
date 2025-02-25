@@ -198,8 +198,12 @@ export const register = (route: Route) => {
   // Update
   route({
     handler: async (req, res) => {
+      console.log("maybe")
+
       const path = await Path.findById(req.params.id).populate<{ owner: IUser }>('owner').exec();
       const user = req.user as IUser;
+
+      console.log("something")
 
       if (!path) {
         res.status(404).json({ error: 'Path not found.' });
@@ -352,8 +356,6 @@ export const register = (route: Route) => {
   route({
     handler: async (req, res) => {
       const waypoints = await Waypoint.find({ path: req.params.id }).exec();
-
-      console.log(0);
 
       if (!waypoints.length) {
         res.status(404).json({ error: 'Waypoint not found.' });

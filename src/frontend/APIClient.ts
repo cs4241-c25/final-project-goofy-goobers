@@ -99,7 +99,7 @@ export class APIClient {
     latitude: number,
     longitude: number,
   ) {
-    return await this.request<Path>({
+    await this.request({
       url: `/api/path/${pathId}/waypoint/${waypointId}`,
       method: 'post',
       payload: {

@@ -45,16 +45,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
       console.log(
         `pid:${pathid} wid:${waypointId} name:${name} des:${description} lat:${latitude} lon:${longitude}`,
       );
-      await api
-        .editWaypoint(
-          pathid ?? '',
-          waypointId,
-          name,
-          description,
-          parseFloat(latitude),
-          parseFloat(longitude),
-        )
-        .catch(captureError);
+      await api.editWaypoint(pathid ?? '', waypointId, name, description, 1, 2).catch(captureError);
 
       const updatedArray = waypointArray.map((wp) =>
         wp.id === waypointId
@@ -78,8 +69,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({
   };
 
   //TODO - make sure only proper Inputs allowed into latitude and longitude field
-  // todo: make the dropdown for name display name but store id (have to make an api call to get all waypoints and map them as options)
-  //number.parseFloat
+  //TODO - double check they want to delete, show all waypoint info
   return (
     <Form onSubmit={handleSubmit}>
       <Label htmlFor="id">Chose the Waypoint: </Label>
