@@ -1,6 +1,6 @@
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
-import { ResetPayload, SignupPayload } from '../shared/Payloads';
+import { ResetPayload, SignupPayload, WaypointPayload } from "../shared/Payloads";
 import { Path } from '../shared/models/Path';
 import { Waypoint } from '../shared/models/Waypoint';
 
@@ -80,6 +80,19 @@ export class APIClient {
     });
   }
 
+  public async createWaypoint(pathId: string, payload: WaypointPayload) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint`,
+      method: 'post',
+      payload: {
+        name: payload.name,
+        description: payload.description,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+      },
+    });
+  }
+
   public async deleteWaypoint(pathId: string, waypointId: string) {
     return await this.request<Path>({
       url: `/api/path/${pathId}/waypoint/${waypointId}`,
@@ -111,11 +124,12 @@ export class APIClient {
     });
   }
 
-  public async getAllWaypointsOnPath(pathId: string) {
-    return await this.request<Waypoint[]>({
-      url: `/api/path/${pathId}/waypoints`,
-      method: 'get',
-    });
+  public async getAllPaths() {
+    return await this.request<Path[]>(`/api/paths/all`);
+  }
+
+  public async getPath(pathId?: string) {
+    return await this.request<Path>(`/api/path/${pathId}`);
   }
 
   public async poll() {

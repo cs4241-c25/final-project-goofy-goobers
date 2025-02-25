@@ -1,58 +1,44 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Waypoint } from '../../shared/models/Waypoint';
-import { useParams } from 'react-router';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { BackButton } from '../components/BackButton';
 import { AddWaypoint } from '../components/AddWaypoint';
 import { EditWaypoint } from '../components/EditWaypoint';
 import { DeleteWaypoint } from '../components/DeleteWaypoint';
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
+import { Path } from '../../shared/models/Path';
+import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
 
 export const PathPage: FC = () => {
   const [editModeFlag, setEditModeFlag] = useState(false);
   const [addModeFlag, setAddModeFlag] = useState(false);
   const [deleteModeFlag, setDeleteModeFlag] = useState(false);
-  const [waypointArray, setWaypointArray] = useState<Waypoint[]>([]);
-  const { pathid } = useParams();
+  const { pathId } = useParams();
 
-  const handleEditMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setEditModeFlag(!editModeFlag);
-  };
+  const [path, setPath] = useState<Path | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setAddModeFlag(!addModeFlag);
-  };
-
-  const handleDeleteMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setDeleteModeFlag(!deleteModeFlag);
-  };
+  const fetchPath = useCallback(() => {
+    api
+      .getPath(pathId)
+      .then((found) => {
+        setPath(found);
+        setLoading(false);
+      })
+      .catch(captureError);
+  }, [pathId]);
 
   useEffect(() => {
-    async function fetchWaypoints() {
-      try {
-        const ways = await api.getAllWaypointsOnPath(pathid ?? '').catch(captureError);
-        if (typeof ways !== 'undefined') {
-          setWaypointArray(ways);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    }
+    fetchPath();
+  }, [fetchPath]);
 
-    void fetchWaypoints();
-  }, [pathid]);
-
-  const updateWaypointArray = (updatedArray: Waypoint[]) => {
-    setWaypointArray(updatedArray);
-  };
+  if (loading || !path) {
+    return <Spinner />;
+  }
 
   return (
     <>
-      <h1>You are at the path called {pathid}</h1>
-      {waypointArray.map((wp) => (
+      <h1>You are at the path called {path.name}</h1>
+      {path.waypoints.map((wp) => (
         // h2 is temp till we get leaflet going
         <h2 key={wp.id}>
           name:{wp.name} lon:{wp.longitude} lat:{wp.latitude}
@@ -61,29 +47,63 @@ export const PathPage: FC = () => {
       {editModeFlag ? (
         <>
           <EditWaypoint
-            setEditModeFlag={setEditModeFlag}
-            waypointArray={waypointArray}
-            updateWaypointArray={updateWaypointArray}
+            close={() => {
+              setEditModeFlag(false);
+            }}
+            path={path}
+            refresh={() => {
+              fetchPath();
+            }}
           />
         </>
       ) : addModeFlag ? (
         <>
-          <AddWaypoint setAddModeFlag={setAddModeFlag} />
+          <AddWaypoint
+            close={() => {
+              setAddModeFlag(false);
+            } }
+            refresh = {() => {
+              fetchPath();
+            }}
+            pathID={pathId ?? ''}
+          />
         </>
       ) : deleteModeFlag ? (
         <>
           <DeleteWaypoint
-            setDeleteModeFlag={setDeleteModeFlag}
-            waypointArray={waypointArray}
-            updateWaypointArray={updateWaypointArray}
+            close={() => {
+              setDeleteModeFlag(false);
+            }}
+            path={path}
+            refresh={() => {
+              fetchPath();
+            }}
           />
         </>
       ) : (
         <>
           <BackButton />
-          <Button onClick={handleAddMode}>Add</Button>
-          <Button onClick={handleEditMode}>Edit</Button>
-          <Button onClick={handleDeleteMode}>Delete</Button>
+          <Button
+            onClick={() => {
+              setAddModeFlag(!addModeFlag);
+            }}
+          >
+            Add
+          </Button>
+          <Button
+            onClick={() => {
+              setEditModeFlag(!editModeFlag);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => {
+              setDeleteModeFlag(!deleteModeFlag);
+            }}
+          >
+            Delete
+          </Button>
         </>
       )}
     </>

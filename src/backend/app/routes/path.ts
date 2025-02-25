@@ -6,6 +6,7 @@ import { IUser } from '../db/models/User';
 import { IWaypoint, Waypoint } from '../db/models/Waypoint';
 import { requireAuthenticated } from '../middleware/requireAuthentication';
 import { WaypointPayload } from '../../../shared/Payloads';
+import { Waypoint as SharedWaypoint } from '../../../shared/models/Waypoint';
 
 export const register = (route: Route) => {
   /* Start Path CRUD */
@@ -38,10 +39,16 @@ export const register = (route: Route) => {
   // Read
   route({
     handler: async (req, res) => {
-      const pathLookup = await Path.findById(req.params.id)
-        .populate<{ owner: IUser }>('owner')
-        .populate<{ waypoints: IWaypoint[] }>('waypoints')
-        .exec();
+      let pathLookup;
+
+      try {
+        pathLookup = await Path.findById(req.params.id)
+          .populate<{ owner: IUser }>('owner')
+          .populate<{ waypoints: IWaypoint[] }>('waypoints')
+          .exec();
+      } catch {
+        /* noop */
+      }
 
       if (!pathLookup) {
         res.status(404).json({ error: 'Path not found.' });
@@ -200,6 +207,7 @@ export const register = (route: Route) => {
     handler: async (req, res) => {
       const path = await Path.findById(req.params.id).populate<{ owner: IUser }>('owner').exec();
       const user = req.user as IUser;
+
       if (!path) {
         res.status(404).json({ error: 'Path not found.' });
         return;
@@ -254,8 +262,6 @@ export const register = (route: Route) => {
         res.status(404).json({ error: 'Path not found.' });
         return;
       }
-
-      console.log(0);
 
       if (!path.owner._id.equals(user._id)) {
         res.status(403).json({ error: 'You do not own this Path.' });
@@ -359,7 +365,7 @@ export const register = (route: Route) => {
         return;
       }
 
-      const sharedWaypoints = waypoints.map((wp) => ({
+      const sharedWaypoints: SharedWaypoint[] = waypoints.map((wp) => ({
         id: wp._id.toHexString(),
         name: wp.name,
         description: wp.description,

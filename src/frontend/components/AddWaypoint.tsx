@@ -1,21 +1,41 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Button } from 'reactstrap';
+import { captureError } from '../utils';
 
 interface AddWaypointProps {
-  setAddModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
+  close: () => void;
+  refresh: () => void;
+  pathID: string;
 }
 
-export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
-  const handleAddMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (setAddModeFlag) {
-      setAddModeFlag(false);
-    }
-  };
+export const AddWaypoint: FC<AddWaypointProps> = ({ close, refresh, pathID }) => {
+ 
+  const handleAdd = useCallback(() => {
+
+    api
+      .createWaypoint(pathID, {
+        name: 'testWP',
+        description: 'testWPDESC',
+        latitude: 1,
+        longitude: 2,
+      })
+      .then(() => {
+        refresh();
+        close();
+      })
+      .catch(captureError);
+      close();
+
+  }, [close, refresh, pathID]);
+  
 
   return (
     <>
-      <Button onClick={handleAddMode}>Dummy</Button>
+      <Button
+        onClick={ () => {handleAdd();}}
+      >
+        Dummy
+      </Button>
     </>
   );
 };

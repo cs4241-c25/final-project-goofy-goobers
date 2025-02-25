@@ -32,7 +32,7 @@ export const App: FC = () => {
         <Container>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/view-path/:pathid" element={<PathPage />} />
+            <Route path="/view-path/:pathId" element={<PathPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

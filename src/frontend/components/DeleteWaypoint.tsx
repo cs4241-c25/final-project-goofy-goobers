@@ -1,47 +1,30 @@
-import React, { FC, useState } from 'react';
-import { Button, Form, Label } from 'reactstrap';
-import { Waypoint } from '../../shared/models/Waypoint';
-import { useParams } from 'react-router';
+import React, { FC, useCallback, useState } from 'react';
+import { Button, FormGroup, Label } from 'reactstrap';
 import { captureError } from '../utils';
+import { Path } from '../../shared/models/Path';
 
 interface DeleteWaypointProps {
-  setDeleteModeFlag?: (value: ((prevState: boolean) => boolean) | boolean) => void;
-  waypointArray: Waypoint[];
-  updateWaypointArray: (updatedArray: Waypoint[]) => void;
+  close: () => void;
+  refresh: () => void;
+  path: Path;
 }
 
-export const DeleteWaypoint: FC<DeleteWaypointProps> = ({
-  setDeleteModeFlag,
-  waypointArray,
-  updateWaypointArray,
-}) => {
+export const DeleteWaypoint: FC<DeleteWaypointProps> = ({ close, refresh, path }) => {
   const [waypointId, setWaypointId] = useState('');
-  const { pathid } = useParams();
 
-  const handleDeleteMode = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (setDeleteModeFlag) {
-      setDeleteModeFlag(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (setDeleteModeFlag) {
-      setDeleteModeFlag(false);
-    }
-    try {
-      await api.deleteWaypoint(pathid ?? '', waypointId).catch(captureError);
-
-      const updatedArray = waypointArray.filter((wp) => wp.id !== waypointId);
-      updateWaypointArray(updatedArray);
-    } catch (error) {
-      console.error('Error saving waypoint:', error);
-    }
-  };
+  const handleDelete = useCallback(() => {
+    api
+      .deleteWaypoint(path.id, waypointId)
+      .then(() => {
+        refresh();
+        close();
+      })
+      .catch(captureError);
+  }, [close, path.id, refresh, waypointId]);
 
   //TODO - make sure only proper Inputs allowed into latitude and longitude field
   return (
-    <Form onSubmit={handleDelete}>
+    <FormGroup>
       <Label htmlFor="id">Chose the Waypoint: </Label>
       <select
         id="waypointId"
@@ -51,15 +34,27 @@ export const DeleteWaypoint: FC<DeleteWaypointProps> = ({
         }}
       >
         <option value="">Select a waypoint</option>
-        {waypointArray.map((waypoint) => (
+        {path.waypoints.map((waypoint) => (
           <option key={waypoint.id} value={waypoint.id}>
             {waypoint.name}
           </option>
         ))}
       </select>
 
-      <Button onClick={handleDeleteMode}>Cancel</Button>
-      <Button>Delete</Button>
-    </Form>
+      <Button
+        onClick={() => {
+          close();
+        }}
+      >
+        Cancel
+      </Button>
+      <Button
+        onClick={() => {
+          handleDelete();
+        }}
+      >
+        Delete
+      </Button>
+    </FormGroup>
   );
 };
