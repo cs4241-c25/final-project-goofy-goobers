@@ -21,8 +21,7 @@ export const DeleteWaypoint: FC<DeleteWaypointProps> = ({ setDeleteModeFlag }) =
     }
   };
 
-  const handleDelete = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const handleDelete = async () => {
     if (setDeleteModeFlag) {
       setDeleteModeFlag(false);
     }
