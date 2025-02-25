@@ -276,7 +276,7 @@ export const register = (route: Route) => {
       res.sendStatus(204);
     },
     method: 'delete',
-    middleware: [requireAuthenticated],
+    // middleware: [requireAuthenticated],
     route: `/api/path/:id/waypoint/:wid`,
   });
 

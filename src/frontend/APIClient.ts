@@ -1,6 +1,7 @@
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
 import { ResetPayload, SignupPayload } from '../shared/Payloads';
+import { Path } from '../shared/models/Path';
 
 interface RequestOptions<T> {
   url: string;
@@ -75,6 +76,17 @@ export class APIClient {
     await this.request({
       url: `/api/auth/logout`,
       method: 'post',
+    });
+  }
+
+  public async deleteWaypoint(pathId: string, waypointId: string) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint/${waypointId}`,
+      method: 'delete',
+      payload: {
+        pathId,
+        waypointId,
+      },
     });
   }
 

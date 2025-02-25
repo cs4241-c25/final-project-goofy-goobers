@@ -6,7 +6,7 @@ import { PathLink } from '../components/PathLink';
 export const HomePage: FC = () => {
   const pathArray: Path[] = [
     {
-      id: '1',
+      id: '67bcf74107867d3a7129a7ba',
       name: 'Pathy',
       description: 'This is the first path',
       owner: { username: 'Jeff' },

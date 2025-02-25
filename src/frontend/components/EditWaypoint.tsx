@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Form, Input, Label } from 'reactstrap';
 import { Waypoint } from '../../shared/models/Waypoint';
 
 interface EditWaypointProps {
@@ -38,12 +38,12 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
     }
   };
 
-  //TODO - make sure only proper inputs allowed into latitude and longitude field
+  //TODO - make sure only proper Inputs allowed into latitude and longitude field
   // todo: make the dropdown for name display name but store id (have to make an api call to get all waypoints and map them as options)
   //number.parseFloat
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="id">Chose the Waypoint: </label>
+    <Form onSubmit={handleSubmit}>
+      <Label htmlFor="id">Chose the Waypoint: </Label>
       <select
         id="id"
         name="id"
@@ -57,8 +57,8 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <br />
 
-      <label htmlFor="name">Name: </label>
-      <input
+      <Label htmlFor="name">Name: </Label>
+      <Input
         type="text"
         id="name"
         name="name"
@@ -70,8 +70,8 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <br />
 
-      <label htmlFor="description">Description: </label>
-      <input
+      <Label htmlFor="description">Description: </Label>
+      <Input
         type="text"
         id="description"
         name="description"
@@ -83,8 +83,8 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <br />
 
-      <label htmlFor="latitude">Latitude: </label>
-      <input
+      <Label htmlFor="latitude">Latitude: </Label>
+      <Input
         type="text"
         id="latitude"
         name="latitude"
@@ -96,8 +96,8 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <br />
 
-      <label htmlFor="longitude">Longitude: </label>
-      <input
+      <Label htmlFor="longitude">Longitude: </Label>
+      <Input
         type="text"
         id="longitude"
         name="longitude"
@@ -111,6 +111,6 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ setEditModeFlag }) => {
 
       <Button onClick={handleEditMode}>Cancel</Button>
       <Button>Save</Button>
-    </form>
+    </Form>
   );
 };

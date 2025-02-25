@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Form, Input, Label } from 'reactstrap';
 import { Waypoint } from '../../shared/models/Waypoint';
 
 interface AddWaypointProps {
@@ -37,13 +37,13 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
     }
   };
 
-  //TODO - make sure only proper inputs allowed into latitude and longitude field
+  //TODO - make sure only proper Inputs allowed into latitude and longitude field
   // todo: make the dropdown for name display name but store id (have to make an api call to get all waypoints and map them as options)
   //number.parseFloat
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name">Name: </label>
-      <input
+    <Form onSubmit={handleSubmit}>
+      <Label htmlFor="name">Name: </Label>
+      <Input
         type="text"
         id="name"
         name="name"
@@ -55,8 +55,8 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
 
       <br />
 
-      <label htmlFor="description">Description: </label>
-      <input
+      <Label htmlFor="description">Description: </Label>
+      <Input
         type="text"
         id="description"
         name="description"
@@ -68,8 +68,8 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
 
       <br />
 
-      <label htmlFor="latitude">Latitude: </label>
-      <input
+      <Label htmlFor="latitude">Latitude: </Label>
+      <Input
         type="text"
         id="latitude"
         name="latitude"
@@ -81,8 +81,8 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
 
       <br />
 
-      <label htmlFor="longitude">Longitude: </label>
-      <input
+      <Label htmlFor="longitude">Longitude: </Label>
+      <Input
         type="text"
         id="longitude"
         name="longitude"
@@ -96,6 +96,6 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ setAddModeFlag }) => {
 
       <Button onClick={handleAddMode}>Cancel</Button>
       <Button>Save</Button>
-    </form>
+    </Form>
   );
 };

@@ -1,5 +1,5 @@
-POST http://localhost:8082/api/path/67ba8c94ca338334285546d7/waypoint
-Cookie: connect.sid=s%3A63nXYPveqppKJVq-5HRjzKHHiAMZybmH.%2F%2FQA%2FVhRUbCuvgIW7YHAPYl1eFROjZFCM5v2XpURYtQ;
+POST http://localhost:8082/api/path/67bcf74107867d3a7129a7ba/waypoint
+Cookie: connect.sid=s%3AqdvRdLoqEmti_sYvbwgpT2YuKUjMYDcy.lPquOeY%2B87BnvVUm0y%2BtBmfuZkYJQSzXb2QumA4RyeI;
 {
     "name": "The Dog House",
     "latitude": "42.2721576",
