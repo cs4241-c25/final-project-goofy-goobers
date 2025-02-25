@@ -166,8 +166,19 @@ export class APIClient {
         parsedResponse = JSON.parse(body, restoreDate) as unknown;
       }
     } catch (error) {
-      if (error instanceof SyntaxError && isAuthenticationError(body, status)) {
-        throw new AuthenticationError(status);
+      if (error instanceof SyntaxError) {
+        if (isOK(body, status)) {
+          return {
+            status: 'OK',
+          } as T;
+        }
+        if (isAuthenticationError(body, status)) {
+          throw new AuthenticationError(status);
+        }
+
+        if (isInternalServerError(body, status)) {
+          throw new ServerError(status);
+        }
       }
 
       if (error instanceof SyntaxError && isInternalServerError(body, status)) {
@@ -215,6 +226,14 @@ const isAuthenticationError = (body: string, status: number) => {
 
 const isInternalServerError = (body: string, status: number) => {
   if (status >= 500 && status <= 599 && body.startsWith('Error')) {
+    return true;
+  }
+
+  return false;
+};
+
+const isOK = (body: string, status: number) => {
+  if (status >= 200 && status <= 299 && body.startsWith('OK')) {
     return true;
   }
 
