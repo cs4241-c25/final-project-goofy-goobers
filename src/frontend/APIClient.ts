@@ -1,8 +1,7 @@
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
-import { ResetPayload, SignupPayload, WaypointPayload } from "../shared/Payloads";
+import { ResetPayload, SignupPayload, WaypointPayload } from '../shared/Payloads';
 import { Path } from '../shared/models/Path';
-import { Waypoint } from '../shared/models/Waypoint';
 
 interface RequestOptions<T> {
   url: string;
