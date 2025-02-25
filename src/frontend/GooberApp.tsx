@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { LoginPage } from './containers/LoginPage';
 import { NotFound } from './containers/NotFound';
 import { HomePage } from './containers/HomePage';
+import { CreatePage } from './containers/CreatePage';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -31,6 +32,7 @@ export const App: FC = () => {
         <Container>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/create" element={<CreatePage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
