@@ -90,6 +90,26 @@ export class APIClient {
     });
   }
 
+  public async editWaypoint(
+    pathId: string,
+    waypointId: string,
+    name: string,
+    description: string,
+    latitude: number,
+    longitude: number,
+  ) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint/${waypointId}`,
+      method: 'post',
+      payload: {
+        name,
+        description,
+        latitude,
+        longitude,
+      },
+    });
+  }
+
   public async poll() {
     return await this.request<User>(`/api/profile/current`);
   }

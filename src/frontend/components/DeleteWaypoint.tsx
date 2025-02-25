@@ -23,8 +23,9 @@ export const DeleteWaypoint: FC<DeleteWaypointProps> = ({ setDeleteModeFlag }) =
 
   const handleDelete = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log('Delete waypoint:', waypointId);
-    console.log('Delete waypoint pathid:', pathid);
+    if (setDeleteModeFlag) {
+      setDeleteModeFlag(false);
+    }
     try {
       await api.deleteWaypoint(pathid ?? '', waypointId).catch(captureError);
     } catch (error) {

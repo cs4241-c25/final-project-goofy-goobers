@@ -6,24 +6,17 @@ import { PathLink } from '../components/PathLink';
 export const HomePage: FC = () => {
   const pathArray: Path[] = [
     {
-      id: '67bcf74107867d3a7129a7ba',
+      id: '67bcf74107867d3a7129a7ba', // Make sure this is a real id on the database!
       name: 'Pathy',
       description: 'This is the first path',
-      owner: { username: 'Jeff' },
+      owner: { username: 'Jeff' }, // Don't mind this field. His name is Jeff
       waypoints: [],
     },
     {
       id: '2',
-      name: 'Pathie',
+      name: 'No need to click (doesnt work cause im a lazy hard coder)',
       description: 'This is the second path!!!!!',
       owner: { username: 'Jeff' },
-      waypoints: [],
-    },
-    {
-      id: '3',
-      name: 'Pathological',
-      description: 'This is the third path (belongs to jill)!!!!!',
-      owner: { username: 'Jill' },
       waypoints: [],
     },
   ];
