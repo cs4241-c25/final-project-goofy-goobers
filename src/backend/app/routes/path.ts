@@ -39,10 +39,16 @@ export const register = (route: Route) => {
   // Read
   route({
     handler: async (req, res) => {
-      const pathLookup = await Path.findById(req.params.id)
-        .populate<{ owner: IUser }>('owner')
-        .populate<{ waypoints: IWaypoint[] }>('waypoints')
-        .exec();
+      let pathLookup;
+
+      try {
+        pathLookup = await Path.findById(req.params.id)
+          .populate<{ owner: IUser }>('owner')
+          .populate<{ waypoints: IWaypoint[] }>('waypoints')
+          .exec();
+      } catch {
+        /* noop */
+      }
 
       if (!pathLookup) {
         res.status(404).json({ error: 'Path not found.' });
