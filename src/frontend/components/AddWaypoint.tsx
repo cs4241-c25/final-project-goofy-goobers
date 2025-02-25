@@ -1,14 +1,17 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Button } from 'reactstrap';
 import { captureError } from '../utils';
 
 interface AddWaypointProps {
   close: () => void;
+  refresh: () => void;
   pathID: string;
 }
 
-export const AddWaypoint: FC<AddWaypointProps> = ({ pathID }) => {
-  const handleAddMode = (e: { preventDefault: () => void }) => {
+export const AddWaypoint: FC<AddWaypointProps> = ({ close, refresh, pathID }) => {
+ 
+  const handleAdd = useCallback(() => {
+
     api
       .createWaypoint(pathID, {
         name: 'testWP',
@@ -16,17 +19,20 @@ export const AddWaypoint: FC<AddWaypointProps> = ({ pathID }) => {
         latitude: 1,
         longitude: 2,
       })
-      .then((response) => {
-        console.log(response);
+      .then(() => {
+        refresh();
+        close();
       })
       .catch(captureError);
       close();
-  };
+
+  }, [close, refresh, pathID]);
+  
 
   return (
     <>
       <Button
-        onClick={handleAddMode}
+        onClick={ () => {handleAdd();}}
       >
         Dummy
       </Button>
