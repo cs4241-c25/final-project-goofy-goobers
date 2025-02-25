@@ -20,8 +20,12 @@ export const LoginPage: FC = () => {
   }, [setUser]);
 
   return (
-    <>
-      <Button onClick={handleLogin}>Login</Button>
-    </>
+    <Button
+      onClick={() => {
+        handleLogin();
+      }}
+    >
+      Login
+    </Button>
   );
 };
