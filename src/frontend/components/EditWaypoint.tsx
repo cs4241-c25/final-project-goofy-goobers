@@ -18,7 +18,14 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ close, refresh, path }) =>
 
   const handleSubmit = useCallback(() => {
     api
-      .editWaypoint(path.id, waypointId, name, description, 1, 2)
+      .editWaypoint(
+        path.id,
+        waypointId,
+        name,
+        description,
+        parseFloat(latitude),
+        parseFloat(longitude),
+      )
       .then(() => {
         refresh();
         close();
@@ -26,7 +33,7 @@ export const EditWaypoint: FC<EditWaypointProps> = ({ close, refresh, path }) =>
       .catch(captureError);
 
     close();
-  }, [close, description, name, path.id, refresh, waypointId]);
+  }, [close, description, name, path.id, refresh, waypointId, longitude, latitude]);
 
   useEffect(() => {
     const currentWaypoint = path.waypoints.find((wp) => wp.id === waypointId);
