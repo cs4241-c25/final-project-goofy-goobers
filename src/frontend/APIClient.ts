@@ -79,6 +79,17 @@ export class APIClient {
     });
   }
 
+  public async createPath(name: string, description?: string) {
+    return await this.request<Path>({
+      url: `/api/path`,
+      method: 'post',
+      payload: {
+        name,
+        description,
+      },
+    });
+  }
+
   public async createWaypoint(pathId: string, payload: WaypointPayload) {
     return await this.request<Path>({
       url: `/api/path/${pathId}/waypoint`,

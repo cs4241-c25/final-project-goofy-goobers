@@ -7,6 +7,7 @@ import { LoginPage } from './containers/LoginPage';
 import { NotFound } from './containers/NotFound';
 import { HomePage } from './containers/HomePage';
 import { PathPage } from './containers/PathPage';
+import { CreatePage } from './containers/CreatePage';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -33,6 +34,7 @@ export const App: FC = () => {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/view-path/:pathId" element={<PathPage />} />
+            <Route path="/create" element={<CreatePage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
