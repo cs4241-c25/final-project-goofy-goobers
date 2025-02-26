@@ -6,6 +6,7 @@ import { IUser } from '../db/models/User';
 import { IWaypoint, Waypoint } from '../db/models/Waypoint';
 import { requireAuthenticated } from '../middleware/requireAuthentication';
 import { WaypointPayload } from '../../../shared/Payloads';
+import { Waypoint as SharedWaypoint } from '../../../shared/models/Waypoint';
 
 export const register = (route: Route) => {
   /* Start Path CRUD */
@@ -29,8 +30,8 @@ export const register = (route: Route) => {
     middleware: [requireAuthenticated],
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
       }).required(),
     },
   });
@@ -38,10 +39,16 @@ export const register = (route: Route) => {
   // Read
   route({
     handler: async (req, res) => {
-      const pathLookup = await Path.findById(req.params.id)
-        .populate<{ owner: IUser }>('owner')
-        .populate<{ waypoints: IWaypoint[] }>('waypoints')
-        .exec();
+      let pathLookup;
+
+      try {
+        pathLookup = await Path.findById(req.params.id)
+          .populate<{ owner: IUser }>('owner')
+          .populate<{ waypoints: IWaypoint[] }>('waypoints')
+          .exec();
+      } catch {
+        /* noop */
+      }
 
       if (!pathLookup) {
         res.status(404).json({ error: 'Path not found.' });
@@ -102,8 +109,8 @@ export const register = (route: Route) => {
     middleware: [requireAuthenticated],
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
       }).required(),
     },
   });
@@ -185,10 +192,10 @@ export const register = (route: Route) => {
     route: `/api/path/:id/waypoint`,
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
-        latitude: Joi.number().required(),
-        longitude: Joi.number().required(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-90).max(90).required(),
       }),
     },
   });
@@ -234,10 +241,10 @@ export const register = (route: Route) => {
     route: `/api/path/:id/waypoint/:wid`,
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
-        latitude: Joi.number().required(),
-        longitude: Joi.number().required(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-90).max(90).required(),
       }),
     },
   });
@@ -346,5 +353,30 @@ export const register = (route: Route) => {
     },
     method: 'get',
     route: '/api/paths/all',
+  });
+
+  // Read all Waypoints on a Path
+  route({
+    handler: async (req, res) => {
+      const waypoints = await Waypoint.find({ path: req.params.id }).exec();
+
+      if (!waypoints.length) {
+        res.status(404).json({ error: 'Waypoint not found.' });
+        return;
+      }
+
+      const sharedWaypoints: SharedWaypoint[] = waypoints.map((wp) => ({
+        id: wp._id.toHexString(),
+        name: wp.name,
+        description: wp.description,
+        longitude: wp.longitude,
+        latitude: wp.latitude,
+        path: wp.path._id.toHexString(),
+      }));
+
+      res.status(200).json(sharedWaypoints);
+    },
+    method: 'get',
+    route: `/api/path/:id/waypoints`,
   });
 };
