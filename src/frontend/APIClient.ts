@@ -1,7 +1,7 @@
 import { HTTPMethod } from '../shared/HTTP';
-import { Path } from '../shared/models/Path';
 import { User } from '../shared/models/User';
-import { ResetPayload, SignupPayload } from '../shared/Payloads';
+import { ResetPayload, SignupPayload, WaypointPayload } from '../shared/Payloads';
+import { Path } from '../shared/models/Path';
 
 interface RequestOptions<T> {
   url: string;
@@ -90,6 +90,46 @@ export class APIClient {
     });
   }
 
+  public async createWaypoint(pathId: string, payload: WaypointPayload) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint`,
+      method: 'post',
+      payload: {
+        name: payload.name,
+        description: payload.description,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+      },
+    });
+  }
+
+  public async deleteWaypoint(pathId: string, waypointId: string) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/waypoint/${waypointId}`,
+      method: 'delete',
+      payload: {
+        pathId,
+        waypointId,
+      },
+    });
+  }
+
+  public async editWaypoint(pathId: string, waypointId: string, waypoint: WaypointPayload) {
+    await this.request({
+      url: `/api/path/${pathId}/waypoint/${waypointId}`,
+      method: 'post',
+      payload: waypoint,
+    });
+  }
+
+  public async getAllPaths() {
+    return await this.request<Path[]>(`/api/paths/all`);
+  }
+
+  public async getPath(pathId?: string) {
+    return await this.request<Path>(`/api/path/${pathId}`);
+  }
+
   public async poll() {
     return await this.request<User>(`/api/profile/current`);
   }
@@ -124,8 +164,19 @@ export class APIClient {
         parsedResponse = JSON.parse(body, restoreDate) as unknown;
       }
     } catch (error) {
-      if (error instanceof SyntaxError && isAuthenticationError(body, status)) {
-        throw new AuthenticationError(status);
+      if (error instanceof SyntaxError) {
+        if (isOK(body, status)) {
+          return {
+            status: 'OK',
+          } as T;
+        }
+        if (isAuthenticationError(body, status)) {
+          throw new AuthenticationError(status);
+        }
+
+        if (isInternalServerError(body, status)) {
+          throw new ServerError(status);
+        }
       }
 
       if (error instanceof SyntaxError && isInternalServerError(body, status)) {
@@ -173,6 +224,14 @@ const isAuthenticationError = (body: string, status: number) => {
 
 const isInternalServerError = (body: string, status: number) => {
   if (status >= 500 && status <= 599 && body.startsWith('Error')) {
+    return true;
+  }
+
+  return false;
+};
+
+const isOK = (body: string, status: number) => {
+  if (status >= 200 && status <= 299 && body.startsWith('OK')) {
     return true;
   }
 
