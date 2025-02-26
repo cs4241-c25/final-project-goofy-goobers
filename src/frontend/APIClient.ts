@@ -114,23 +114,11 @@ export class APIClient {
     });
   }
 
-  public async editWaypoint(
-    pathId: string,
-    waypointId: string,
-    name: string,
-    description: string,
-    latitude: number,
-    longitude: number,
-  ) {
+  public async editWaypoint(pathId: string, waypointId: string, waypoint: WaypointPayload) {
     await this.request({
       url: `/api/path/${pathId}/waypoint/${waypointId}`,
       method: 'post',
-      payload: {
-        name,
-        description,
-        latitude,
-        longitude,
-      },
+      payload: waypoint,
     });
   }
 

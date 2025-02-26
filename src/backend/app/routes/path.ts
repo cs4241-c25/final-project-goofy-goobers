@@ -30,8 +30,8 @@ export const register = (route: Route) => {
     middleware: [requireAuthenticated],
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
       }).required(),
     },
   });
@@ -109,8 +109,8 @@ export const register = (route: Route) => {
     middleware: [requireAuthenticated],
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
       }).required(),
     },
   });
@@ -192,10 +192,10 @@ export const register = (route: Route) => {
     route: `/api/path/:id/waypoint`,
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
-        latitude: Joi.number().required(),
-        longitude: Joi.number().required(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-90).max(90).required(),
       }),
     },
   });
@@ -241,10 +241,10 @@ export const register = (route: Route) => {
     route: `/api/path/:id/waypoint/:wid`,
     validate: {
       payload: Joi.object({
-        name: Joi.string().required(),
-        description: Joi.string(),
-        latitude: Joi.number().required(),
-        longitude: Joi.number().required(),
+        name: Joi.string().min(3).max(1024).required(),
+        description: Joi.string().max(40000),
+        latitude: Joi.number().min(-90).max(90).required(),
+        longitude: Joi.number().min(-90).max(90).required(),
       }),
     },
   });
