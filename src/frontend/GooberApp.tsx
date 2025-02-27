@@ -8,6 +8,7 @@ import { NotFound } from './containers/NotFound';
 import { HomePage } from './containers/HomePage';
 import { PathPage } from './containers/PathPage';
 import { CreatePage } from './containers/CreatePage';
+import { SignupPage } from './containers/SignupPage';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -33,6 +34,7 @@ export const App: FC = () => {
         {!loading && (
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/view-path/:pathId" element={<PathPage />} />
             <Route path="/create" element={<CreatePage />} />
             <Route index element={<HomePage />} />

@@ -10,7 +10,7 @@ export const LoginPage: FC = () => {
 
   const handleLogin = useCallback(() => {
     api
-      .authenticate('gompei', 'salisbury')
+      .authenticate('dblatner', '123')
       .then((usr) => {
         setUser(usr);
         toast.success(`Logged in succesfully as ${usr.username}`);
