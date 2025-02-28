@@ -78,8 +78,8 @@ export const WaypointForm: FC<WaypointFormProps> = ({ initialWaypoint, submit, c
           onChange={(e) => {
             setWaypoint('longitude', Number.parseFloat(e.target.value));
           }}
-          min={-90}
-          max={90}
+          min={-180}
+          max={180}
           required
         />
         <br />
