@@ -46,19 +46,28 @@ export const AppNavbar: FC = () => {
               Home
             </NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink tag={Link} to="/create">
-              Create Path
-            </NavLink>
-          </NavItem>
+          {user && (
+            <NavItem>
+              <NavLink tag={Link} to="/create">
+                Create Path
+              </NavLink>
+            </NavItem>
+          )}
         </Nav>
         <Nav navbar>
           {!user ? (
-            <NavItem>
-              <NavLink tag={Link} to="/login">
-                Login
-              </NavLink>
-            </NavItem>
+            <>
+              <NavItem>
+                <NavLink tag={Link} to="/signup">
+                  Sign Up
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/login">
+                  Login
+                </NavLink>
+              </NavItem>
+            </>
           ) : (
             <NavItem>
               <Button
