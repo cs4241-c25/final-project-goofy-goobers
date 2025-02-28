@@ -31,7 +31,7 @@ export const register = (route: Route) => {
       req.logout((err) => {
         console.error(err);
       });
-      res.redirect('/');
+      res.status(200).json({ message: 'Logged out' });
     },
     method: 'post',
     middleware: [requireAuthenticated],

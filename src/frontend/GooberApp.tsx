@@ -8,6 +8,7 @@ import { NotFound } from './containers/NotFound';
 import { HomePage } from './containers/HomePage';
 import { PathPage } from './containers/PathPage';
 import { CreatePage } from './containers/CreatePage';
+import { AppNavbar } from './components/Navbar';
 
 export const App: FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -29,6 +30,7 @@ export const App: FC = () => {
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
+      <AppNavbar />
       <Container>
         {!loading && (
           <Routes>
