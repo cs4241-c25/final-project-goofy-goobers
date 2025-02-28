@@ -1,31 +1,28 @@
 import React, { FC, useCallback, useContext } from 'react';
-import { Button } from 'reactstrap';
 import { UserContext } from '../services/providers';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { captureError } from '../utils';
+import { LoginPayload } from '../../shared/Payloads';
+import { LoginForm } from '../components/LoginForm';
 
 export const LoginPage: FC = () => {
   const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const handleLogin = useCallback(() => {
-    api
-      .authenticate('gompei', 'salisbury')
-      .then((usr) => {
-        setUser(usr);
-        toast.success(`Logged in succesfully as ${usr.username}`);
-        redirect('/');
-      })
-      .catch(captureError);
-  }, [setUser]);
-
-  return (
-    <Button
-      onClick={() => {
-        handleLogin();
-      }}
-    >
-      Login
-    </Button>
+  const handleLogin = useCallback(
+    (payload: LoginPayload) => {
+      api
+        .authenticate(payload)
+        .then(async (usr) => {
+          setUser(usr);
+          toast.success(`Logged in succesfully as ${usr.username}`);
+          await navigate('/');
+        })
+        .catch(captureError);
+    },
+    [setUser, navigate],
   );
+
+  return <LoginForm submit={handleLogin} />;
 };

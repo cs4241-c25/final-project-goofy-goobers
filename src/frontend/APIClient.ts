@@ -1,6 +1,6 @@
 import { HTTPMethod } from '../shared/HTTP';
 import { User } from '../shared/models/User';
-import { ResetPayload, SignupPayload, WaypointPayload } from '../shared/Payloads';
+import { ResetPayload, SignupPayload, WaypointPayload, LoginPayload } from '../shared/Payloads';
 import { Path } from '../shared/models/Path';
 
 interface RequestOptions<T> {
@@ -61,14 +61,11 @@ export class APIClient {
     });
   }
 
-  public async authenticate(username: string, password: string) {
+  public async authenticate(payload: LoginPayload) {
     return await this.request<User>({
       url: `/api/auth/login`,
       method: 'post',
-      payload: {
-        username,
-        password,
-      },
+      payload,
     });
   }
 

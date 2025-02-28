@@ -8,6 +8,11 @@ export interface SignupPayload {
   securityAnswer: string;
 }
 
+export interface LoginPayload {
+  username: string;
+  password: string;
+}
+
 export interface ResetPayload {
   username: string;
   securityAnswer: string;
