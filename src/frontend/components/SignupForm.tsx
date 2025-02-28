@@ -35,7 +35,7 @@ export const SignupForm: FC<SignupFormProps> = ({ submit }) => {
       !form.securityAnswer ||
       !form.securityQuestion
     ) {
-      toast.error('Signup Failed: Missing required input');
+      toast.error('Signup Failed: Please complete all fields.');
       return;
     }
 
