@@ -15,8 +15,18 @@ export const LoginForm: FC<LoginFormProps> = ({ submit }) => {
   });
 
   const handleSubmission = useCallback(() => {
-    if (!form.username || !form.password) {
-      toast.error('Login Failed: Missing required input');
+    const failed = false;
+    if (!form.username) {
+      failed = true;
+      toast.error('Please provide your username.');
+    }
+    
+    if (!form.password) {
+      failed = true;
+      toast.error('Please provide your password.');
+    }
+    
+    if (failed) {
       return;
     }
 
