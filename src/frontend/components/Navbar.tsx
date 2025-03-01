@@ -70,7 +70,7 @@ export const AppNavbar: FC = () => {
             </>
           ) : (
             <>
-            <NavbarText className={"me-3"}>Welcome, {user?.name}</NavbarText>
+            <NavbarText className={"me-3"}>Welcome, {user.name}</NavbarText>
             <NavItem>
               <Button
                 color="secondary"

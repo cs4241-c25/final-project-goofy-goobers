@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -14,6 +14,8 @@ import { captureError } from '../utils';
 import { Waypoint } from '../../shared/models/Waypoint';
 import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
+import { UserContext } from '../services/providers';
+import { Path } from '../../shared/models/Path';
 
 export const WaypointCard: FC<{
   readonly waypoint: Waypoint;
@@ -22,6 +24,25 @@ export const WaypointCard: FC<{
 }> = ({ waypoint, pathId, refresh }) => {
   const [isEditting, setIsEditting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { user, setUser } = useContext(UserContext);
+  const [path, setPath] = useState<Path | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPath = useCallback(() => {
+    api
+      .getPath(pathId)
+      .then((found) => {
+        setPath(found);
+        setLoading(false);
+      })
+      .catch(captureError);
+  }, [pathId]);
+
+  useEffect(() => {
+    fetchPath();
+  }, [fetchPath]);
+
+
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
       api
@@ -58,7 +79,7 @@ export const WaypointCard: FC<{
             />
           )}
         </CardBody>
-        {!isEditting && (
+        {!isEditting && path?.owner.username === user?.username && (
           <CardFooter className="float-right">
             <Button
               onClick={() => {
