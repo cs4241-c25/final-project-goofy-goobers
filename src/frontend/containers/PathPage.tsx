@@ -7,6 +7,7 @@ import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { WaypointCard } from '../components/WaypointCard';
+import { TrailMap } from '../components/TrailMap';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
@@ -64,6 +65,7 @@ export const PathPage: FC = () => {
           New Waypoint
         </Button>
       </div>
+      <TrailMap />
       {path.waypoints.map((wp) => (
         <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} key={wp.id} />
       ))}
