@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Label, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
