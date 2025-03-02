@@ -65,7 +65,7 @@ export const PathPage: FC = () => {
           New Waypoint
         </Button>
       </div>
-      <TrailMap />
+      <TrailMap path={path} refresh={fetchPath} key={path.id} />
       {path.waypoints.map((wp) => (
         <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} key={wp.id} />
       ))}
