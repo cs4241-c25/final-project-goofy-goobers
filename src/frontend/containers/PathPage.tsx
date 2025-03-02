@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
+import { Button, Label, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
@@ -7,7 +7,6 @@ import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
-import { WaypointCard } from '../components/WaypointCard';
 import { UserContext } from '../services/providers';
 
 export const PathPage: FC = () => {
@@ -55,26 +54,21 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      <h1>Viewing: {path.name}</h1>
-      <h2>Waypoints</h2>
-      <div className="float-right">
-        <Button
-          color="primary"
-          onClick={() => {
-            setCreating(true);
-          }}
-          style={{
-            position: 'fixed',
-            top: '56px', // 20px + navbar
-            right: '20px',
-            width: '10%', // Adjust the width as needed
-            height: 'calc(100vh - 56px)', // Adjust based on the height of your navbar
-            zIndex: 1000,
-          }}
-        >
-          New Waypoint
-        </Button>
-      </div>
+      {/*this is not right todo: make it actually center*/}
+      <h1
+        style={{
+          position: 'fixed',
+          top: 'calc(20px + 56px)', // 20px + navbar
+          display: 'flex',
+          justifyContent: 'flex-start',
+          color: 'black !important', // todo: do
+          backgroundColor: 'green',
+          zIndex: 1000,
+          padding: '5px',
+        }}
+      >
+        path: {path.name}
+      </h1>
       <TrailMap path={path} refresh={fetchPath} key={path.id} />
       {path.owner.username === user?.username && (
         <div className="float-right">
@@ -83,20 +77,28 @@ export const PathPage: FC = () => {
             onClick={() => {
               setCreating(true);
             }}
+            style={{
+              position: 'fixed',
+              top: 'calc(20px + 56px)', // 20px + navbar
+              right: '20px',
+              width: '150px',
+              height: '40px',
+              zIndex: 1000,
+            }}
           >
             New Waypoint
           </Button>
         </div>
       )}
-      {path.waypoints.map((wp) => (
-        <WaypointCard
-          refresh={fetchPath}
-          pathId={path.id}
-          waypoint={wp}
-          owner={path.owner.username}
-          key={wp.id}
-        />
-      ))}
+      {/*{path.waypoints.map((wp) => (*/}
+      {/*  <WaypointCard*/}
+      {/*    refresh={fetchPath}*/}
+      {/*    pathId={path.id}*/}
+      {/*    waypoint={wp}*/}
+      {/*    owner={path.owner.username}*/}
+      {/*    key={wp.id}*/}
+      {/*  />*/}
+      {/*))}*/}
       <Modal
         isOpen={creating}
         toggle={() => {

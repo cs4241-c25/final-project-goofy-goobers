@@ -9,6 +9,10 @@ const FitBounds: FC<{ path: Path }> = ({ path }) => {
   const map = useMap();
 
   useEffect(() => {
+    // make sure it has at least one waypoint
+    if (!path.waypoints.length) {
+      return;
+    }
     const bounds = path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number]);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     map.fitBounds(bounds);
@@ -22,6 +26,10 @@ export const TrailMap: FC<{
   readonly refresh: () => void;
 }> = ({ path, refresh }) => {
   const calculateCenter = (path: Path): [number, number] => {
+    if (!path.waypoints.length) {
+      return [0, 0];
+    }
+
     const latitudes = path.waypoints.map((wp) => wp.latitude);
     const longitudes = path.waypoints.map((wp) => wp.longitude); // mapping twice is kinda dumb. todo: do it better
     const sumLat = latitudes.reduce((acc, lat) => acc + lat, 0);
@@ -54,7 +62,13 @@ export const TrailMap: FC<{
           <Marker position={[wp.latitude, wp.longitude]} key={wp.id}>
             {/*pop up is currently a little jank cause of how the refresh works, it closes out when clicking edit*/}
             <Popup>
-              <WaypointCard refresh={refresh} pathId={path.id} waypoint={wp} key={wp.id} />
+              <WaypointCard
+                refresh={refresh}
+                pathId={path.id}
+                waypoint={wp}
+                key={wp.id}
+                owner={path.owner.username}
+              />
             </Popup>
           </Marker>
         ))}
@@ -64,7 +78,6 @@ export const TrailMap: FC<{
         />
         <FitBounds path={path} />
       </MapContainer>
-      <h1> end of dupes</h1>
     </>
   );
 };
