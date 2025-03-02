@@ -56,7 +56,7 @@ export const PathPage: FC = () => {
     <>
       <h1>Viewing: {path.name}</h1>
       <h2>Waypoints</h2>
-      {path.owner.username === user?.username ? (
+      {path.owner.username === user?.username && (
         <div className="float-right">
           <Button
             color="primary"
@@ -67,9 +67,9 @@ export const PathPage: FC = () => {
             New Waypoint
           </Button>
         </div>
-      ) : (<></>)}
+      )}
       {path.waypoints.map((wp) => (
-        <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} key={wp.id} />
+        <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} owner={path.owner.username} key={wp.id} />
       ))}
       <Modal
         isOpen={creating}

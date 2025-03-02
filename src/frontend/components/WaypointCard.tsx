@@ -21,27 +21,13 @@ export const WaypointCard: FC<{
   readonly waypoint: Waypoint;
   readonly pathId: string;
   readonly refresh: () => void;
-}> = ({ waypoint, pathId, refresh }) => {
+  readonly owner: string;
+}> = ({ waypoint, pathId, refresh, owner }) => {
   const [isEditting, setIsEditting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user} = useContext(UserContext);
   const [path, setPath] = useState<Path | undefined>(undefined);
   const [loading, setLoading] = useState(true);
-
-  const fetchPath = useCallback(() => {
-    api
-      .getPath(pathId)
-      .then((found) => {
-        setPath(found);
-        setLoading(false);
-      })
-      .catch(captureError);
-  }, [pathId]);
-
-  useEffect(() => {
-    fetchPath();
-  }, [fetchPath]);
-
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
@@ -79,7 +65,7 @@ export const WaypointCard: FC<{
             />
           )}
         </CardBody>
-        {!isEditting && path?.owner.username === user?.username && (
+        {!isEditting && owner === user?.username && (
           <CardFooter className="float-right">
             <Button
               onClick={() => {
