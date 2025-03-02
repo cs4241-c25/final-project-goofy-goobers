@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
+import { WaypointCard } from '../components/WaypointCard';
+import { UserContext } from '../services/providers';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
@@ -14,6 +16,7 @@ export const PathPage: FC = () => {
   const [path, setPath] = useState<Path | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const { user } = useContext(UserContext);
 
   const fetchPath = useCallback(() => {
     api
@@ -73,6 +76,27 @@ export const PathPage: FC = () => {
         </Button>
       </div>
       <TrailMap path={path} refresh={fetchPath} key={path.id} />
+      {path.owner.username === user?.username && (
+        <div className="float-right">
+          <Button
+            color="primary"
+            onClick={() => {
+              setCreating(true);
+            }}
+          >
+            New Waypoint
+          </Button>
+        </div>
+      )}
+      {path.waypoints.map((wp) => (
+        <WaypointCard
+          refresh={fetchPath}
+          pathId={path.id}
+          waypoint={wp}
+          owner={path.owner.username}
+          key={wp.id}
+        />
+      ))}
       <Modal
         isOpen={creating}
         toggle={() => {
