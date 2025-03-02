@@ -1,10 +1,21 @@
-import React, { FC } from 'react';
-// // ⚠️ No types available here
-// import { MapContainer } from 'react-leaflet/MapContainer';
-// ✅ Types are available here
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import React, { FC, useEffect } from 'react';
+import { MapContainer, Marker, Popup, TileLayer, useMap, Map } from 'react-leaflet';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
+
+// there are 2 lint ignores, todo: fix
+const FitBounds: FC<{ path: Path }> = ({ path }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const map = useMap();
+
+  useEffect(() => {
+    const bounds = path.waypoints.map(wp => [wp.latitude, wp.longitude] as [number, number]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+    map.fitBounds(bounds);
+  }, [map, path]);
+
+  return null;
+};
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -24,7 +35,7 @@ export const TrailMap: FC<{
     <>
       <MapContainer
         center={centerPoint}
-        zoom={13} // placeholder, will be derived from the waypoints
+        zoom={1} // placeholder, will be derived from the waypoints
         scrollWheelZoom={false}
         style={{ height: '900px' }} // placeholder height, currently looks ugly
       >
@@ -40,6 +51,7 @@ export const TrailMap: FC<{
             </Popup>
           </Marker>
         ))}
+        <FitBounds path={path} />
       </MapContainer>
       {path.waypoints.map((wp) => (
         <WaypointCard refresh={refresh} pathId={path.id} waypoint={wp} key={wp.id} />
