@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap, Map } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
 
