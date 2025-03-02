@@ -6,7 +6,6 @@ import { captureError } from '../utils';
 import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
-import { WaypointCard } from '../components/WaypointCard';
 import { TrailMap } from '../components/TrailMap';
 
 export const PathPage: FC = () => {
@@ -61,14 +60,19 @@ export const PathPage: FC = () => {
           onClick={() => {
             setCreating(true);
           }}
+          style={{
+            position: 'fixed',
+            top: '56px', // 20px + navbar
+            right: '20px',
+            width: '10%', // Adjust the width as needed
+            height: 'calc(100vh - 56px)', // Adjust based on the height of your navbar
+            zIndex: 1000,
+          }}
         >
           New Waypoint
         </Button>
       </div>
       <TrailMap path={path} refresh={fetchPath} key={path.id} />
-      {path.waypoints.map((wp) => (
-        <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} key={wp.id} />
-      ))}
       <Modal
         isOpen={creating}
         toggle={() => {

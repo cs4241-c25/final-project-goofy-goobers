@@ -42,6 +42,7 @@ export const WaypointCard: FC<{
       })
       .catch(captureError);
   }, [pathId, refresh, waypoint.id]);
+
   return (
     <>
       <Card>
