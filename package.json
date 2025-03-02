@@ -27,7 +27,7 @@
     }
   ],
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.14.0"
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p src/backend/tsconfig.json && webpack --config build/webpack.config.js",
@@ -47,8 +47,8 @@
     "@types/node": "^22.13.1",
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
     "css-loader": "^7.1.2",
@@ -86,8 +86,8 @@
     "mongoose": "^8.10.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.1.5",
     "react-toastify": "^11.0.3"
