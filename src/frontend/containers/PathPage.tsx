@@ -15,7 +15,7 @@ export const PathPage: FC = () => {
   const [path, setPath] = useState<Path | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const fetchPath = useCallback(() => {
     api
@@ -69,7 +69,13 @@ export const PathPage: FC = () => {
         </div>
       )}
       {path.waypoints.map((wp) => (
-        <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} owner={path.owner.username} key={wp.id} />
+        <WaypointCard
+          refresh={fetchPath}
+          pathId={path.id}
+          waypoint={wp}
+          owner={path.owner.username}
+          key={wp.id}
+        />
       ))}
       <Modal
         isOpen={creating}

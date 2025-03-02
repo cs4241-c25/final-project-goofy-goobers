@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useState } from 'react';
 import {
   Button,
   Card,
@@ -15,7 +15,6 @@ import { Waypoint } from '../../shared/models/Waypoint';
 import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { UserContext } from '../services/providers';
-import { Path } from '../../shared/models/Path';
 
 export const WaypointCard: FC<{
   readonly waypoint: Waypoint;
@@ -25,9 +24,7 @@ export const WaypointCard: FC<{
 }> = ({ waypoint, pathId, refresh, owner }) => {
   const [isEditting, setIsEditting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { user} = useContext(UserContext);
-  const [path, setPath] = useState<Path | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {

@@ -8,7 +8,8 @@ import {
   Nav,
   NavItem,
   NavLink,
-  Button, NavbarText,
+  Button,
+  NavbarText,
 } from 'reactstrap';
 import { UserContext } from '../services/providers';
 import { captureError } from '../utils';
@@ -70,17 +71,17 @@ export const AppNavbar: FC = () => {
             </>
           ) : (
             <>
-            <NavbarText className={"me-3"}>Welcome, {user.name}</NavbarText>
-            <NavItem>
-              <Button
-                color="secondary"
-                onClick={() => {
-                  handleLogout();
-                }}
-              >
-                Logout
-              </Button>
-            </NavItem>
+              <NavbarText className={'me-3'}>Welcome, {user.name}</NavbarText>
+              <NavItem>
+                <Button
+                  color="secondary"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </Button>
+              </NavItem>
             </>
           )}
         </Nav>
