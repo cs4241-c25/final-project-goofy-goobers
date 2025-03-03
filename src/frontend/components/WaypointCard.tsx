@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 import { captureError } from '../utils';
 import { Waypoint } from '../../shared/models/Waypoint';
-import { WaypointForm } from '../components/WaypointForm';
+import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { UserContext } from '../services/providers';
 
@@ -21,8 +21,9 @@ export const WaypointCard: FC<{
   readonly pathId: string;
   readonly refresh: () => void;
   readonly owner: string;
-}> = ({ waypoint, pathId, refresh, owner }) => {
-  const [isEditting, setIsEditting] = useState(false);
+  readonly onMap?: boolean;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
 
@@ -31,7 +32,7 @@ export const WaypointCard: FC<{
       api
         .editWaypoint(pathId, waypoint.id, payload)
         .then(() => {
-          setIsEditting(false);
+          setIsEditing(false);
           refresh();
         })
         .catch(captureError);
@@ -46,27 +47,29 @@ export const WaypointCard: FC<{
       })
       .catch(captureError);
   }, [pathId, refresh, waypoint.id]);
+
   return (
     <>
       <Card>
         <CardBody>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {isEditting && (
-            <WaypointForm
-              initialWaypoint={waypoint}
-              closeForm={() => {
-                setIsEditting(false);
-              }}
-              submit={submitEdit}
-            />
-          )}
+          {isEditing &&
+            !onMap && ( // keeping editing from non-map the way it is
+              <WaypointForm
+                initialWaypoint={waypoint}
+                closeForm={() => {
+                  setIsEditing(false);
+                }}
+                submit={submitEdit}
+              />
+            )}
         </CardBody>
-        {!isEditting && owner === user?.username && (
+        {!isEditing && owner === user?.username && (
           <CardFooter className="float-right">
             <Button
               onClick={() => {
-                setIsEditting(true);
+                setIsEditing(true);
               }}
             >
               Edit
@@ -82,6 +85,28 @@ export const WaypointCard: FC<{
           </CardFooter>
         )}
       </Card>
+
+      {/* todo: test out translucent?, would be nice to see the map while editing */}
+      {onMap && ( // only modal when editing from map, up for scrutiny
+        <Modal
+          toggle={() => {
+            setIsEditing(!isDeleting);
+          }}
+          isOpen={isEditing}
+        >
+          <ModalHeader>Editing {waypoint.name}</ModalHeader>
+          <ModalBody>
+            <WaypointForm
+              initialWaypoint={waypoint}
+              closeForm={() => {
+                setIsEditing(false);
+              }}
+              submit={submitEdit}
+            />
+          </ModalBody>
+        </Modal>
+      )}
+
       <Modal
         toggle={() => {
           setIsDeleting(!isDeleting);

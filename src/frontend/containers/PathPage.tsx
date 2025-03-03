@@ -6,8 +6,9 @@ import { captureError } from '../utils';
 import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
-import { WaypointCard } from '../components/WaypointCard';
+import { TrailMap } from '../components/TrailMap';
 import { UserContext } from '../services/providers';
+import { WaypointCard } from '../components/WaypointCard';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
@@ -54,20 +55,22 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      <h1>Viewing: {path.name}</h1>
-      <h2>Waypoints</h2>
-      {path.owner.username === user?.username && (
-        <div className="float-right">
-          <Button
-            color="primary"
-            onClick={() => {
-              setCreating(true);
-            }}
-          >
-            New Waypoint
-          </Button>
-        </div>
-      )}
+      <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
+        <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
+        {path.owner.username === user?.username && (
+          <div className="float-right">
+            <Button
+              color="primary"
+              onClick={() => {
+                setCreating(true);
+              }}
+            >
+              New Waypoint
+            </Button>
+          </div>
+        )}
+      </div>
+      <TrailMap path={path} refresh={fetchPath} key={path.id} />
       {path.waypoints.map((wp) => (
         <WaypointCard
           refresh={fetchPath}
