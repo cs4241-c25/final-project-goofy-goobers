@@ -1,38 +1,32 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Path } from '../../shared/models/Path';
-import { User } from '../../shared/models/User';
 import { captureError } from '../utils';
 import { PathCard } from '../components/PathCard';
 import { Row, Col } from 'reactstrap';
+import { UserContext } from '../services/providers';
 
 export const HomePage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [paths, setPaths] = useState<Path[]>([]);
   const [yourPaths, setYourPaths] = useState<Path[]>([]);
-  const [currentUser, setCurrentUser] = useState<User>({ username: '', name: '', email: '' });
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    api //get and set user
-      .poll()
-      .then((retrieved) => {
-        setCurrentUser(retrieved);
-      })
-      .catch(captureError);
-
     api //get and set the two path lists
       .getAllPaths()
       .then((retrieved) => {
         setPaths(retrieved);
 
         const tempPaths: Path[] = retrieved.filter((path) => {
-          return path.owner.username === currentUser.username;
+          return path.owner.username === user?.username;
         });
         setYourPaths(tempPaths);
 
         setLoading(false);
       })
       .catch(captureError);
-  }, [currentUser]);
+  }, [user]);
 
   return (
     <>
