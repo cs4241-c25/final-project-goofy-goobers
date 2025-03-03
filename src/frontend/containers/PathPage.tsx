@@ -8,6 +8,7 @@ import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
 import { UserContext } from '../services/providers';
+import { WaypointCard } from '../components/WaypointCard';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
@@ -54,51 +55,31 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      {/*this is not right todo: make it actually center*/}
-      <h1
-        style={{
-          position: 'fixed',
-          top: 'calc(20px + 56px)', // 20px + navbar
-          display: 'flex',
-          justifyContent: 'flex-start',
-          color: 'black !important', // todo: do
-          backgroundColor: 'green',
-          zIndex: 1000,
-          padding: '5px',
-        }}
-      >
-        path: {path.name}
-      </h1>
+      <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
+        <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
+        {path.owner.username === user?.username && (
+          <div className="float-right">
+            <Button
+              color="primary"
+              onClick={() => {
+                setCreating(true);
+              }}
+            >
+              New Waypoint
+            </Button>
+          </div>
+        )}
+      </div>
       <TrailMap path={path} refresh={fetchPath} key={path.id} />
-      {path.owner.username === user?.username && (
-        <div className="float-right">
-          <Button
-            color="primary"
-            onClick={() => {
-              setCreating(true);
-            }}
-            style={{
-              position: 'fixed',
-              top: 'calc(20px + 56px)', // 20px + navbar
-              right: '20px',
-              width: '150px',
-              height: '40px',
-              zIndex: 1000,
-            }}
-          >
-            New Waypoint
-          </Button>
-        </div>
-      )}
-      {/*{path.waypoints.map((wp) => (*/}
-      {/*  <WaypointCard*/}
-      {/*    refresh={fetchPath}*/}
-      {/*    pathId={path.id}*/}
-      {/*    waypoint={wp}*/}
-      {/*    owner={path.owner.username}*/}
-      {/*    key={wp.id}*/}
-      {/*  />*/}
-      {/*))}*/}
+      {path.waypoints.map((wp) => (
+        <WaypointCard
+          refresh={fetchPath}
+          pathId={path.id}
+          waypoint={wp}
+          owner={path.owner.username}
+          key={wp.id}
+        />
+      ))}
       <Modal
         isOpen={creating}
         toggle={() => {

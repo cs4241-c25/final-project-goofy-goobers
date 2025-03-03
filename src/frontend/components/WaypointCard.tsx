@@ -21,7 +21,8 @@ export const WaypointCard: FC<{
   readonly pathId: string;
   readonly refresh: () => void;
   readonly owner: string;
-}> = ({ waypoint, pathId, refresh, owner }) => {
+  readonly onMap?: boolean;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
   const [isEditting, setIsEditting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
@@ -53,15 +54,16 @@ export const WaypointCard: FC<{
         <CardBody>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {isEditting && (
-            <WaypointForm
-              initialWaypoint={waypoint}
-              closeForm={() => {
-                setIsEditting(false);
-              }}
-              submit={submitEdit}
-            />
-          )}
+          {isEditting &&
+            !onMap && ( // keeping editing from non-map the way it is
+              <WaypointForm
+                initialWaypoint={waypoint}
+                closeForm={() => {
+                  setIsEditting(false);
+                }}
+                submit={submitEdit}
+              />
+            )}
         </CardBody>
         {!isEditting && owner === user?.username && (
           <CardFooter className="float-right">
@@ -83,6 +85,28 @@ export const WaypointCard: FC<{
           </CardFooter>
         )}
       </Card>
+
+      {/* todo: test out having this be translucent, would be nice to see the map while editing */}
+      {onMap && ( // only modal when editing from map, up for scrutiny
+        <Modal
+          toggle={() => {
+            setIsEditting(!isDeleting);
+          }}
+          isOpen={isEditting}
+        >
+          <ModalHeader>Editing {waypoint.name}</ModalHeader>
+          <ModalBody>
+            <WaypointForm
+              initialWaypoint={waypoint}
+              closeForm={() => {
+                setIsEditting(false);
+              }}
+              submit={submitEdit}
+            />
+          </ModalBody>
+        </Modal>
+      )}
+
       <Modal
         toggle={() => {
           setIsDeleting(!isDeleting);
