@@ -2,11 +2,10 @@ import React, { FC, useEffect } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline } from 'react-leaflet';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
+import L from 'leaflet';
 
-// there are 2 lint ignores, todo: fix
 const FitBounds: FC<{ path: Path }> = ({ path }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const map = useMap();
+  const map = useMap() as L.Map;
 
   useEffect(() => {
     // make sure it has at least one waypoint
@@ -14,7 +13,6 @@ const FitBounds: FC<{ path: Path }> = ({ path }) => {
       return;
     }
     const bounds = path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number]);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     map.fitBounds(bounds);
   }, [map, path]);
 
@@ -26,32 +24,28 @@ export const TrailMap: FC<{
   readonly refresh: () => void;
 }> = ({ path, refresh }) => {
   const calculateCenter = (path: Path): [number, number] => {
-    if (!path.waypoints.length) {
-      return [0, 0];
-    }
-
-    const latitudes = path.waypoints.map((wp) => wp.latitude);
-    const longitudes = path.waypoints.map((wp) => wp.longitude); // mapping twice is kinda dumb. todo: do it better
-    const sumLat = latitudes.reduce((acc, lat) => acc + lat, 0);
-    const sumLong = longitudes.reduce((acc, long) => acc + long, 0);
-    return [sumLat / latitudes.length, sumLong / longitudes.length];
+    const [sumLat, sumLong, count] = path.waypoints.reduce(
+      ([accLat, accLong, count], wp) => [accLat + wp.latitude, accLong + wp.longitude, count + 1],
+      [0, 0, 0],
+    );
+    return count ? [sumLat / count, sumLong / count] : [0, 0];
   };
 
   const centerPoint = calculateCenter(path);
 
   return (
     <>
+      {/* todo (time permitting): make the waypoints location update when editing & make waypoints draggable */}
+      {/* todo (if possible): add waypoint based on cursor location relative to map */}
       <MapContainer
         center={centerPoint}
         zoom={1} // placeholder, will be derived from the waypoints
         scrollWheelZoom={false}
         style={{
-          position: 'fixed',
-          top: '56px', // Adjust based on the height of your navbar
           right: '0',
-          width: '100%', // Adjust the width as needed
-          height: 'calc(100vh - 56px)', // Adjust based on the height of your navbar
-          zIndex: 1,
+          width: '100%',
+          height: '60vh',
+          margin: '0 0 10px 0', // might change
         }}
       >
         <TileLayer
@@ -68,6 +62,7 @@ export const TrailMap: FC<{
                 waypoint={wp}
                 key={wp.id}
                 owner={path.owner.username}
+                onMap={true}
               />
             </Popup>
           </Marker>
