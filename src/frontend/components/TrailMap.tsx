@@ -2,13 +2,11 @@ import React, { FC, useEffect } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline } from 'react-leaflet';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
-import L from 'leaflet';
 
 const FitBounds: FC<{ path: Path }> = ({ path }) => {
-  const map = useMap() as L.Map;
+  const map = useMap();
 
   useEffect(() => {
-    // make sure it has at least one waypoint
     if (!path.waypoints.length) {
       return;
     }
@@ -35,6 +33,7 @@ export const TrailMap: FC<{
 
   return (
     <>
+      {/* todo: test out different Marker icons other than the blue pin */}
       {/* todo (time permitting): make the waypoints location update when editing & make waypoints draggable */}
       {/* todo (if possible): add waypoint based on cursor location relative to map */}
       <MapContainer
