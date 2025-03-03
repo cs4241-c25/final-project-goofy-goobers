@@ -1,26 +1,22 @@
 import React, { FC, useEffect } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline } from 'react-leaflet';
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  Polyline,
+  useMapEvents,
+} from 'react-leaflet';
+import { Button } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
-
-const FitBounds: FC<{ path: Path }> = ({ path }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!path.waypoints.length) {
-      return;
-    }
-    const bounds = path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number]);
-    map.fitBounds(bounds);
-  }, [map, path]);
-
-  return null;
-};
 
 export const TrailMap: FC<{
   readonly path: Path;
   readonly refresh: () => void;
-}> = ({ path, refresh }) => {
+  readonly areAdding: boolean;
+}> = ({ path, refresh, areAdding = true }) => {
   const calculateCenter = (path: Path): [number, number] => {
     const [sumLat, sumLong, count] = path.waypoints.reduce(
       ([accLat, accLong, count], wp) => [accLat + wp.latitude, accLong + wp.longitude, count + 1],
@@ -30,6 +26,36 @@ export const TrailMap: FC<{
   };
 
   const centerPoint = calculateCenter(path);
+
+  const addWaypoint = (lat: number, lng: number) => {
+    console.log(`new waypoint being added at ${lat} ${lng}`);
+    // todo: logic for adding to database
+  };
+
+  const FitBounds: FC<{ path: Path }> = ({ path }) => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!path.waypoints.length) {
+        return;
+      }
+      const bounds = path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number]);
+      map.fitBounds(bounds);
+    }, [map, path]);
+
+    return null;
+  };
+
+  const AddWaypointOnClick: FC<{ addWaypoint: (lat: number, lng: number) => void }> = ({
+    addWaypoint,
+  }) => {
+    useMapEvents({
+      click(e) {
+        addWaypoint(e.latlng.lat, e.latlng.lng);
+      },
+    });
+    return null;
+  };
 
   return (
     <>
@@ -71,6 +97,9 @@ export const TrailMap: FC<{
           color="red" // todo: find a color that looks good on both the whitish and green land of leaflet
         />
         <FitBounds path={path} />
+        <Button> testing </Button>
+        {areAdding && <AddWaypointOnClick addWaypoint={addWaypoint} />}
+        {!areAdding && <AddWaypointOnClick addWaypoint={addWaypoint} />} {/* just for testing*/}
       </MapContainer>
     </>
   );
