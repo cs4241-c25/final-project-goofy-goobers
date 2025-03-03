@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { captureError } from '../utils';
 import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
+import { TrailMap } from '../components/TrailMap';
+import { UserContext } from '../services/providers';
 import { WaypointCard } from '../components/WaypointCard';
 
 export const PathPage: FC = () => {
@@ -14,6 +16,7 @@ export const PathPage: FC = () => {
   const [path, setPath] = useState<Path | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const { user } = useContext(UserContext);
 
   const fetchPath = useCallback(() => {
     api
@@ -52,20 +55,30 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      <h1>Viewing: {path.name}</h1>
-      <h2>Waypoints</h2>
-      <div className="float-right">
-        <Button
-          color="primary"
-          onClick={() => {
-            setCreating(true);
-          }}
-        >
-          New Waypoint
-        </Button>
+      <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
+        <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
+        {path.owner.username === user?.username && (
+          <div className="float-right">
+            <Button
+              color="primary"
+              onClick={() => {
+                setCreating(true);
+              }}
+            >
+              New Waypoint
+            </Button>
+          </div>
+        )}
       </div>
+      <TrailMap path={path} refresh={fetchPath} key={path.id} />
       {path.waypoints.map((wp) => (
-        <WaypointCard refresh={fetchPath} pathId={path.id} waypoint={wp} key={wp.id} />
+        <WaypointCard
+          refresh={fetchPath}
+          pathId={path.id}
+          waypoint={wp}
+          owner={path.owner.username}
+          key={wp.id}
+        />
       ))}
       <Modal
         isOpen={creating}

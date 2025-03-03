@@ -16,19 +16,20 @@ export const registerAuth = (app: Express) => {
           .exec()
           .then((user) => {
             if (!user) {
-              done(null, false);
+              done(null, false, { message: 'Username or password mismatch.' });
               return;
             }
 
             // Validate password
             if (!user.validatePassword(password)) {
-              done(null, false);
+              done(null, false, { message: 'Username or password mismatch.' });
               return;
             }
+
             done(null, user);
           })
           .catch(() => {
-            done(null, false);
+            done(null, false, { message: 'Unknown error occurred while trying to authenticate.' });
           });
       },
     ),
