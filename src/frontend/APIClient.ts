@@ -37,10 +37,24 @@ export class AuthenticationError extends RequestError {
   }
 }
 
+export class LoginError extends RequestError {
+  public override name = 'LoginError';
+  public constructor(public readonly code: number) {
+    super(code);
+  }
+}
+
 export class ServerError extends RequestError {
   public override name = 'ServerError';
   public constructor(public readonly code: number) {
     super(code);
+  }
+}
+
+export class PermissionError extends RequestError {
+  public override name = 'PermissionError';
+  public constructor(public readonly message: string) {
+    super(403, message);
   }
 }
 
@@ -167,6 +181,15 @@ export class APIClient {
             status: 'OK',
           } as T;
         }
+
+        if (permissionError(status)) {
+          throw new PermissionError("You don't have permission to do that.");
+        }
+
+        if (url === '/api/auth/login' && isAuthenticationError(body, status)) {
+          throw new LoginError(status);
+        }
+
         if (isAuthenticationError(body, status)) {
           throw new AuthenticationError(status);
         }
@@ -188,6 +211,12 @@ export class APIClient {
     }
 
     if (status >= 400 && status <= 499) {
+      if (permissionError(status)) {
+        // to everyone else: never do this.
+        const msg = (body as unknown as { error: string }).error;
+        throw new PermissionError(msg);
+      }
+
       throw new APIError(status, parsedResponse as object);
     }
 
@@ -217,6 +246,10 @@ const isAuthenticationError = (body: string, status: number) => {
   }
 
   return false;
+};
+
+const permissionError = (status: number) => {
+  return status === 403;
 };
 
 const isInternalServerError = (body: string, status: number) => {
