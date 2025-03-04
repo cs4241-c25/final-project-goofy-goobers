@@ -77,16 +77,21 @@ export const TrailMap: FC<{
 
   const customIcon = L.divIcon({
     className: 'custom-dot-icon',
-    html: '<div style="width: 10px; height: 10px; background-color: #202053; border-radius: 50%;"></div>',
-    iconSize: [8, 8], // Size of the dot
-    iconAnchor: [4, 4], // Center the dot
+    html: `
+    <div style="width: 15px; height: 15px; background-color: black; border-radius: 50%; position: relative;">
+      <div style="width: 13px; height: 13px; background-color: RGB(49, 117, 189); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div style="width: 5px; height: 5px; background-color: #f2f2f2; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+      </div>
+     </div>
+  `,
+    iconSize: [15, 15], // Size of the dot
+    iconAnchor: [7, 7], // Center the dot
   });
 
   return (
     <>
       {/* todo: test out different Marker icons other than the blue pin */}
       {/* todo (time permitting): make the waypoints location update when editing & make waypoints draggable */}
-      {/* todo (if possible): add waypoint based on cursor location relative to map */}
       <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
         <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
         {path.owner.username === user?.username && (
@@ -110,7 +115,7 @@ export const TrailMap: FC<{
           right: '0',
           width: '100%',
           height: '60vh',
-          margin: '0 0 10px 0', // might change
+          margin: '0 0 10px 0',
         }}
       >
         <TileLayer
