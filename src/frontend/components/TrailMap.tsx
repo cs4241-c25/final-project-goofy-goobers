@@ -15,6 +15,7 @@ import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { captureError } from '../utils';
+import L from 'leaflet';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -34,11 +35,6 @@ export const TrailMap: FC<{
   const { user } = useContext(UserContext); // change to be passed down
 
   const centerPoint = calculateCenter(path);
-
-  // const addWaypoint = (lat: number, lng: number) => {
-  //   console.log(`new waypoint being added at ${lat} ${lng}`);
-  //   // todo: logic for adding to database, requires modal
-  // };
 
   const addWaypoint = useCallback(
     (waypoint: WaypointPayload) => {
@@ -67,8 +63,7 @@ export const TrailMap: FC<{
     return null;
   };
 
-  // eslint-disable-next-line no-empty-pattern
-  const AddWaypointOnClick: FC = ({}) => {
+  const AddWaypointOnClick: FC = () => {
     useMapEvents({
       click(e) {
         // addWaypoint(e.latlng.lat, e.latlng.lng);
@@ -79,6 +74,13 @@ export const TrailMap: FC<{
     });
     return null;
   };
+
+  const customIcon = L.divIcon({
+    className: 'custom-dot-icon',
+    html: '<div style="width: 8px; height: 8px; background-color: black; border-radius: 50%;"></div>',
+    iconSize: [8, 8], // Size of the dot
+    iconAnchor: [4, 4], // Center the dot
+  });
 
   return (
     <>
@@ -102,7 +104,7 @@ export const TrailMap: FC<{
       </div>
       <MapContainer
         center={centerPoint}
-        zoom={1} // placeholder, will be derived from the waypoints
+        zoom={1} // path with no waypoints, otherwise set by FixBounds
         scrollWheelZoom={false}
         style={{
           right: '0',
@@ -116,8 +118,7 @@ export const TrailMap: FC<{
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {path.waypoints.map((wp) => (
-          <Marker position={[wp.latitude, wp.longitude]} key={wp.id}>
-            {/*pop up is currently a little jank cause of how the refresh works, it closes out when clicking edit*/}
+          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon}>
             <Popup>
               <WaypointCard
                 refresh={refresh}
@@ -135,7 +136,6 @@ export const TrailMap: FC<{
           color="red" // todo: find a color that looks good on both the whitish and green land of leaflet
         />
         <FitBounds path={path} />
-        <Button> testing </Button>
         {areAdding && <AddWaypointOnClick />}
       </MapContainer>
       {modalTime && (
@@ -149,6 +149,8 @@ export const TrailMap: FC<{
           <ModalBody>
             <WaypointForm
               initialWaypoint={{
+                id: 'whatever',
+                path: 'dont care',
                 name: '',
                 latitude: lat,
                 longitude: lng,
