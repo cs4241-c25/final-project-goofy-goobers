@@ -7,6 +7,11 @@ export const PathCard: FC<{
   readonly path: Path;
 }> = ({ path }) => {
   const distance = calcDistance(path);
+  const allMinutes = calcTime(distance);
+  const minutes = allMinutes % 60;
+  const allHours = Math.floor(allMinutes / 60);
+  const days = Math.floor(allHours / 24);
+  const hours = allHours % 24;
   return (
     <>
       <Card>
@@ -15,9 +20,20 @@ export const PathCard: FC<{
             <h4>{path.name}</h4>
           </Link>
           <h5>{'Owner: ' + path.owner.username}</h5>
-          <b>{'Distance: ' + distance + ' km'}</b>
-          <br />
-          <b>{'Estimated Time: ' + calcTime(distance) + ' minutes'}</b>
+          { (path.waypoints.length > 1) && (
+            <>
+              <b>{'Distance: ' + distance + ' km'}</b>
+              <br />
+              {(days > 0) ? (
+              <b>{'Estimated Time: ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes'}</b>
+              ) :
+              (hours > 0) ? (
+              <b>{'Estimated Time: ' + hours + ' hours ' + minutes + ' minutes'}</b>
+              ) : (
+              <b>{'Estimated Time: ' + minutes + ' minutes'}</b>
+              )}
+            </>
+          )}
           {path.description && <CardText>{path.description}</CardText>}
         </CardBody>
       </Card>
