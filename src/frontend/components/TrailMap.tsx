@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   MapContainer,
   Marker,
@@ -8,15 +8,19 @@ import {
   Polyline,
   useMapEvents,
 } from 'react-leaflet';
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
+import { UserContext } from '../services/providers';
+import { WaypointForm } from './WaypointForm';
+import { WaypointPayload } from '../../shared/Payloads';
+import { toast } from 'react-toastify';
+import { captureError, useObjectState } from '../utils';
 
 export const TrailMap: FC<{
   readonly path: Path;
   readonly refresh: () => void;
-  readonly areAdding: boolean;
-}> = ({ path, refresh, areAdding = true }) => {
+}> = ({ path, refresh }) => {
   const calculateCenter = (path: Path): [number, number] => {
     const [sumLat, sumLong, count] = path.waypoints.reduce(
       ([accLat, accLong, count], wp) => [accLat + wp.latitude, accLong + wp.longitude, count + 1],
@@ -24,13 +28,31 @@ export const TrailMap: FC<{
     );
     return count ? [sumLat / count, sumLong / count] : [0, 0];
   };
+  const [areAdding, setAreAdding] = useState(false);
+  const [modalTime, setModalTime] = useState(false);
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
+  const { user } = useContext(UserContext); // change to be passed down
 
   const centerPoint = calculateCenter(path);
 
-  const addWaypoint = (lat: number, lng: number) => {
-    console.log(`new waypoint being added at ${lat} ${lng}`);
-    // todo: logic for adding to database
-  };
+  // const addWaypoint = (lat: number, lng: number) => {
+  //   console.log(`new waypoint being added at ${lat} ${lng}`);
+  //   // todo: logic for adding to database, requires modal
+  // };
+
+  const addWaypoint = useCallback(
+    (waypoint: WaypointPayload) => {
+      api
+        .createWaypoint(path.id, waypoint)
+        .then(() => {
+          setModalTime(false);
+          refresh();
+        })
+        .catch(captureError);
+    },
+    [refresh, path],
+  );
 
   const FitBounds: FC<{ path: Path }> = ({ path }) => {
     const map = useMap();
@@ -46,12 +68,14 @@ export const TrailMap: FC<{
     return null;
   };
 
-  const AddWaypointOnClick: FC<{ addWaypoint: (lat: number, lng: number) => void }> = ({
-    addWaypoint,
-  }) => {
+  // eslint-disable-next-line no-empty-pattern
+  const AddWaypointOnClick: FC = ({}) => {
     useMapEvents({
       click(e) {
-        addWaypoint(e.latlng.lat, e.latlng.lng);
+        // addWaypoint(e.latlng.lat, e.latlng.lng);
+        setLat(e.latlng.lat);
+        setLng(e.latlng.lng);
+        setModalTime(true);
       },
     });
     return null;
@@ -62,6 +86,21 @@ export const TrailMap: FC<{
       {/* todo: test out different Marker icons other than the blue pin */}
       {/* todo (time permitting): make the waypoints location update when editing & make waypoints draggable */}
       {/* todo (if possible): add waypoint based on cursor location relative to map */}
+      <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
+        <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
+        {path.owner.username === user?.username && (
+          <div className="float-right">
+            <Button
+              color={areAdding ? 'secondary' : 'primary'}
+              onClick={() => {
+                setAreAdding(!areAdding);
+              }}
+            >
+              {areAdding ? 'Adding Waypoint (Click Map)' : 'Add New Waypoint'}
+            </Button>
+          </div>
+        )}
+      </div>
       <MapContainer
         center={centerPoint}
         zoom={1} // placeholder, will be derived from the waypoints
@@ -98,9 +137,31 @@ export const TrailMap: FC<{
         />
         <FitBounds path={path} />
         <Button> testing </Button>
-        {areAdding && <AddWaypointOnClick addWaypoint={addWaypoint} />}
-        {!areAdding && <AddWaypointOnClick addWaypoint={addWaypoint} />} {/* just for testing*/}
+        {areAdding && <AddWaypointOnClick />}
       </MapContainer>
+      {modalTime && (
+        <Modal
+          isOpen={areAdding}
+          toggle={() => {
+            setAreAdding(!areAdding);
+          }}
+        >
+          <ModalHeader>New Waypoint</ModalHeader>
+          <ModalBody>
+            <WaypointForm
+              initialWaypoint={{
+                name: '',
+                latitude: lat,
+                longitude: lng,
+              }}
+              submit={addWaypoint}
+              closeForm={() => {
+                setAreAdding(false);
+              }}
+            />
+          </ModalBody>
+        </Modal>
+      )}
     </>
   );
 };
