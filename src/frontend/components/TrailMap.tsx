@@ -14,8 +14,7 @@ import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
-import { toast } from 'react-toastify';
-import { captureError, useObjectState } from '../utils';
+import { captureError } from '../utils';
 
 export const TrailMap: FC<{
   readonly path: Path;
