@@ -20,17 +20,20 @@ export const PathCard: FC<{
             <h4>{path.name}</h4>
           </Link>
           <h5>{'Owner: ' + path.owner.username}</h5>
-          <b>{'Distance: ' + distance + ' km'}</b>
-          <br />
-          {(days > 0) ? (
-            <b>{'Estimated Time: ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes'}</b>
-            ) :
-            (hours > 0) ? (
+          { (path.waypoints.length > 1) && (
+            <>
+              <b>{'Distance: ' + distance + ' km'}</b>
+              <br />
+              {(days > 0) ? (
+              <b>{'Estimated Time: ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes'}</b>
+              ) :
+              (hours > 0) ? (
               <b>{'Estimated Time: ' + hours + ' hours ' + minutes + ' minutes'}</b>
-            ) : (
+              ) : (
               <b>{'Estimated Time: ' + minutes + ' minutes'}</b>
-            )
-          }
+              )}
+            </>
+          )}
           {path.description && <CardText>{path.description}</CardText>}
         </CardBody>
       </Card>
