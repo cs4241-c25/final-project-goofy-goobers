@@ -77,7 +77,7 @@ export const TrailMap: FC<{
 
   const customIcon = L.divIcon({
     className: 'custom-dot-icon',
-    html: '<div style="width: 8px; height: 8px; background-color: black; border-radius: 50%;"></div>',
+    html: '<div style="width: 10px; height: 10px; background-color: #202053; border-radius: 50%;"></div>',
     iconSize: [8, 8], // Size of the dot
     iconAnchor: [4, 4], // Center the dot
   });
@@ -133,7 +133,7 @@ export const TrailMap: FC<{
         ))}
         <Polyline
           positions={path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number])}
-          color="red" // todo: find a color that looks good on both the whitish and green land of leaflet
+          color="RGB(200, 52, 52)"
         />
         <FitBounds path={path} />
         {areAdding && <AddWaypointOnClick />}
