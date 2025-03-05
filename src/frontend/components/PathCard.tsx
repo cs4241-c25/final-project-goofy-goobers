@@ -29,7 +29,7 @@ export const PathCard: FC<{
   }, [path]);
 
   const rawMinutes = (distance / 5) * 60;
-  const minutes = (rawMinutes % 60).toPrecision(0);
+  const minutes = (rawMinutes % 60).toFixed(0);
   const rawHours = Math.floor(rawMinutes / 60);
   const days = Math.floor(rawHours / 24);
   const hours = rawHours % 24;
