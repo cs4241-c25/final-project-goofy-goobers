@@ -66,7 +66,6 @@ export const TrailMap: FC<{
   const AddWaypointOnClick: FC = () => {
     useMapEvents({
       click(e) {
-        // addWaypoint(e.latlng.lat, e.latlng.lng);
         setLat(e.latlng.lat);
         setLng(e.latlng.lng);
         setModalTime(true);
@@ -78,14 +77,14 @@ export const TrailMap: FC<{
   const customIcon = L.divIcon({
     className: 'custom-dot-icon',
     html: `
-    <div style="width: 15px; height: 15px; background-color: black; border-radius: 50%; position: relative;">
+    <div style="width: 16px; height: 16px; background-color: black; border-radius: 50%; position: relative;">
       <div style="width: 13px; height: 13px; background-color: RGB(49, 117, 189); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <div style="width: 5px; height: 5px; background-color: #f2f2f2; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
       </div>
      </div>
   `,
-    iconSize: [15, 15], // Size of the dot
-    iconAnchor: [7, 7], // Center the dot
+    iconSize: [16, 16], // Size of the dot
+    iconAnchor: [8, 8], // Center the dot
   });
 
   return (
@@ -138,7 +137,15 @@ export const TrailMap: FC<{
         ))}
         <Polyline
           positions={path.waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number])}
-          color="RGB(200, 52, 52)"
+          color="RGB(222, 209, 179)"
+          weight={5}
+          pathOptions={{
+            color: 'RGB(222, 209, 179)', // Main line color
+            weight: 5, // Main line weight
+            opacity: 1,
+            fillOpacity: 1,
+            className: 'polyline-outline',
+          }}
         />
         <FitBounds path={path} />
         {areAdding && <AddWaypointOnClick />}
