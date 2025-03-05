@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
+import React, { FC, useCallback, useEffect, useContext, useState } from 'react';
+import { Modal, ModalBody, ModalHeader, Spinner, Button } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
 import { WaypointCard } from '../components/WaypointCard';
 import { PlayMode } from '../components/PlayMode';
+import { UserContext } from '../services/providers';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
