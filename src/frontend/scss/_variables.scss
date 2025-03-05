@@ -1,0 +1,26 @@
+$color-white: #F2F2F2;
+$color-tan: #EBC6A1;
+$color-darkest: #242424;
+$color-medium: #40544F;
+$color-dark: #1F2926;
+
+$color-success: #198754;
+$color-danger: #dc3545;
+$color-secondary: #6c757d;
+
+$theme-colors: (
+    "white": $color-white,
+    "light": $color-tan,
+    "grey": $color-medium,
+    "brown": $color-dark,
+    "black": $color-darkest,
+    "success": $color-success,
+    "danger": $color-danger,
+    "secondary": $color-secondary,
+    "primary": $color-medium,
+);
+
+$body-bg: $color-white;
+$body-color: $color-darkest;
+
+$font-family-sans-serif: 'Verdana';

@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
@@ -7,7 +7,6 @@ import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
-import { UserContext } from '../services/providers';
 import { WaypointCard } from '../components/WaypointCard';
 import { PlayMode } from '../components/PlayMode';
 
@@ -115,7 +114,7 @@ export const PathPage: FC = () => {
                 }}
               />
             </ModalBody>
-          </Modal>{' '}
+          </Modal>
         </>
       )}
       {isPlaying && (
