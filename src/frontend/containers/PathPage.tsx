@@ -60,21 +60,6 @@ export const PathPage: FC = () => {
     <>
       {!isPlaying && (
         <>
-          <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
-            <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
-            {path.owner.username === user?.username && (
-              <div className="float-right">
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    setCreating(true);
-                  }}
-                >
-                  New Waypoint
-                </Button>
-              </div>
-            )}
-          </div>
           <TrailMap path={path} refresh={fetchPath} key={path.id} />
           {path.waypoints.map((wp) => (
             <WaypointCard

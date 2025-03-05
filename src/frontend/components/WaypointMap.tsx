@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { MapContainer, Marker, TileLayer, useMap, Polyline } from 'react-leaflet';
 import { Waypoint } from '../../shared/models/Waypoint';
+import L from 'leaflet';
 
 const FitBounds: FC<{ waypoints: Waypoint[] }> = ({ waypoints }) => {
   const map = useMap();
@@ -28,6 +29,19 @@ export const WaypointMap: FC<{
   };
   const centerPoint = calculateCenter(waypoints);
 
+  const customIcon = L.divIcon({
+    className: 'custom-dot-icon',
+    html: `
+      <div style="width: 16px; height: 16px; background-color: black; border-radius: 50%; position: relative;">
+        <div style="width: 13px; height: 13px; background-color: RGB(49, 117, 189); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <div style="width: 5px; height: 5px; background-color: #f2f2f2; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        </div>
+       </div>
+    `,
+    iconSize: [16, 16], // Size of the dot
+    iconAnchor: [8, 8], // Center the dot
+  });
+
   return (
     <>
       <MapContainer
@@ -46,11 +60,11 @@ export const WaypointMap: FC<{
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {waypoints.map((wp) => (
-          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} />
+          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon} />
         ))}
         <Polyline
           positions={waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number])}
-          color="red"
+          color="RGB(222, 209, 179)"
         />
 
         <FitBounds waypoints={waypoints} />
