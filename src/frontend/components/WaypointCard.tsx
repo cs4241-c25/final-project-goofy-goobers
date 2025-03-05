@@ -101,6 +101,7 @@ export const WaypointCard: FC<{
               setIsEditing(false);
             }}
             submit={submitEdit}
+            onMap={onMap}
           />
         </ModalBody>
       </Modal>

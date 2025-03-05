@@ -8,9 +8,15 @@ interface WaypointFormProps {
   initialWaypoint?: Waypoint;
   closeForm: () => void;
   submit: (payload: WaypointPayload) => void;
+  onMap?: boolean;
 }
 
-export const WaypointForm: FC<WaypointFormProps> = ({ initialWaypoint, submit, closeForm }) => {
+export const WaypointForm: FC<WaypointFormProps> = ({
+  initialWaypoint,
+  submit,
+  closeForm,
+  onMap = false,
+}) => {
   const [waypoint, setWaypoint] = useObjectState<WaypointPayload>({
     name: initialWaypoint?.name ?? '',
     description: initialWaypoint?.description,
@@ -53,36 +59,53 @@ export const WaypointForm: FC<WaypointFormProps> = ({ initialWaypoint, submit, c
           }}
         />
         <br />
-        <Label for="latitude">Latitude: </Label>
-        <Input
-          type="number"
-          id="latitude"
-          name="latitude"
-          placeholder="Enter decimal of latitude here"
-          defaultValue={waypoint.latitude}
-          min={-90}
-          max={90}
-          onChange={(e) => {
-            setWaypoint('latitude', Number.parseFloat(e.target.value));
-          }}
-          required
-        />
-        <br />
-        <Label for="longitude">Longitude: </Label>
-        <Input
-          type="number"
-          id="longitude"
-          name="longitude"
-          placeholder="Enter decimal of longitude here"
-          defaultValue={waypoint.longitude}
-          onChange={(e) => {
-            setWaypoint('longitude', Number.parseFloat(e.target.value));
-          }}
-          min={-180}
-          max={180}
-          required
-        />
-        <br />
+        {onMap ? (
+          <>
+            <Button
+              color="primary"
+              onClick={() => {
+                closeForm();
+              }}
+            >
+              change location by clicking map
+            </Button>
+            <br />
+            <br />
+          </>
+        ) : (
+          <>
+            <Label for="latitude">Latitude: </Label>
+            <Input
+              type="number"
+              id="latitude"
+              name="latitude"
+              placeholder="Enter decimal of latitude here"
+              defaultValue={waypoint.latitude}
+              min={-90}
+              max={90}
+              onChange={(e) => {
+                setWaypoint('latitude', Number.parseFloat(e.target.value));
+              }}
+              required
+            />
+            <br />
+            <Label for="longitude">Longitude: </Label>
+            <Input
+              type="number"
+              id="longitude"
+              name="longitude"
+              placeholder="Enter decimal of longitude here"
+              defaultValue={waypoint.longitude}
+              onChange={(e) => {
+                setWaypoint('longitude', Number.parseFloat(e.target.value));
+              }}
+              min={-180}
+              max={180}
+              required
+            />
+            <br />
+          </>
+        )}
         <Button
           color="secondary"
           onClick={() => {
