@@ -21,7 +21,8 @@ export const WaypointCard: FC<{
   readonly pathId: string;
   readonly refresh: () => void;
   readonly owner: string;
-}> = ({ waypoint, pathId, refresh, owner }) => {
+  readonly onMap?: boolean;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
@@ -53,7 +54,7 @@ export const WaypointCard: FC<{
         <CardBody>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {/*{isEditing && (*/}
+          {/*{isEditing && ( // keeping editing from non-map the way it is*/}
           {/*  <WaypointForm*/}
           {/*    initialWaypoint={waypoint}*/}
           {/*    closeForm={() => {*/}

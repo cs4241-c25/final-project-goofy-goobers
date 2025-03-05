@@ -132,6 +132,7 @@ export const TrailMap: FC<{
                 waypoint={wp}
                 key={wp.id}
                 owner={path.owner.username}
+                onMap={true}
               />
             </Popup>
           </Marker>
