@@ -21,8 +21,7 @@ export const WaypointCard: FC<{
   readonly pathId: string;
   readonly refresh: () => void;
   readonly owner: string;
-  readonly onMap?: boolean;
-}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
+}> = ({ waypoint, pathId, refresh, owner }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
@@ -54,16 +53,15 @@ export const WaypointCard: FC<{
         <CardBody>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {isEditing &&
-            !onMap && ( // keeping editing from non-map the way it is
-              <WaypointForm
-                initialWaypoint={waypoint}
-                closeForm={() => {
-                  setIsEditing(false);
-                }}
-                submit={submitEdit}
-              />
-            )}
+          {/*{isEditing && (*/}
+          {/*  <WaypointForm*/}
+          {/*    initialWaypoint={waypoint}*/}
+          {/*    closeForm={() => {*/}
+          {/*      setIsEditing(false);*/}
+          {/*    }}*/}
+          {/*    submit={submitEdit}*/}
+          {/*  />*/}
+          {/*)}*/}
         </CardBody>
         {!isEditing && owner === user?.username && (
           <CardFooter className="float-right">
@@ -87,25 +85,24 @@ export const WaypointCard: FC<{
       </Card>
 
       {/* todo: test out translucent?, would be nice to see the map while editing */}
-      {onMap && ( // only modal when editing from map, up for scrutiny
-        <Modal
-          toggle={() => {
-            setIsEditing(!isDeleting);
-          }}
-          isOpen={isEditing}
-        >
-          <ModalHeader>Editing {waypoint.name}</ModalHeader>
-          <ModalBody>
-            <WaypointForm
-              initialWaypoint={waypoint}
-              closeForm={() => {
-                setIsEditing(false);
-              }}
-              submit={submitEdit}
-            />
-          </ModalBody>
-        </Modal>
-      )}
+
+      <Modal
+        toggle={() => {
+          setIsEditing(!isDeleting);
+        }}
+        isOpen={isEditing}
+      >
+        <ModalHeader>Editing {waypoint.name}</ModalHeader>
+        <ModalBody>
+          <WaypointForm
+            initialWaypoint={waypoint}
+            closeForm={() => {
+              setIsEditing(false);
+            }}
+            submit={submitEdit}
+          />
+        </ModalBody>
+      </Modal>
 
       <Modal
         toggle={() => {

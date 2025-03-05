@@ -74,18 +74,20 @@ export const TrailMap: FC<{
     return null;
   };
 
-  const customIcon = L.divIcon({
-    className: 'custom-dot-icon',
-    html: `
+  const customIcon = (index: number) =>
+    L.divIcon({
+      className: 'custom-dot-icon',
+      html: `
     <div style="width: 16px; height: 16px; background-color: black; border-radius: 50%; position: relative;">
       <div style="width: 13px; height: 13px; background-color: RGB(49, 117, 189); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <div style="width: 5px; height: 5px; background-color: #f2f2f2; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+<!--        <div style="width: 5px; height: 5px; background-color: #f2f2f2; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>-->
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 10px;">${index}</div>
       </div>
      </div>
   `,
-    iconSize: [16, 16], // Size of the dot
-    iconAnchor: [8, 8], // Center the dot
-  });
+      iconSize: [16, 16], // Size of the dot
+      iconAnchor: [8, 8], // Center the dot
+    });
 
   return (
     <>
@@ -121,8 +123,8 @@ export const TrailMap: FC<{
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {path.waypoints.map((wp) => (
-          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon}>
+        {path.waypoints.map((wp, index) => (
+          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon(index)}>
             <Popup>
               <WaypointCard
                 refresh={refresh}
@@ -130,7 +132,6 @@ export const TrailMap: FC<{
                 waypoint={wp}
                 key={wp.id}
                 owner={path.owner.username}
-                onMap={true}
               />
             </Popup>
           </Marker>
@@ -141,7 +142,7 @@ export const TrailMap: FC<{
           weight={5}
           pathOptions={{
             color: 'RGB(222, 209, 179)', // Main line color
-            weight: 5, // Main line weight
+            weight: 5,
             opacity: 1,
             fillOpacity: 1,
             className: 'polyline-outline',
