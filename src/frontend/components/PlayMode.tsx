@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Button } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { WaypointMap } from './WaypointMap';
@@ -23,21 +23,21 @@ export const PlayMode: FC<PlayModeProps> = ({ path, exitPlayMode }) => {
 
   const currentWaypoint = path.waypoints[currentWaypointIndex];
 
-  const handleGoNext = () => {
+  const handleGoNext = useCallback(() => {
     if (currentWaypointIndex < path.waypoints.length - 1) {
       setTransition('from', currentWaypoint);
       setTransition('to', path.waypoints[currentWaypointIndex + 1]);
       setIsTransitioning(true);
     }
-  };
+  }, [currentWaypoint, currentWaypointIndex, path.waypoints, setTransition]);
 
-  const handleGoPrev = () => {
+  const handleGoPrev = useCallback(() => {
     if (currentWaypointIndex > 0) {
       setTransition('from', currentWaypoint);
       setTransition('to', path.waypoints[currentWaypointIndex - 1]);
       setIsTransitioning(true);
     }
-  };
+  }, [currentWaypoint, currentWaypointIndex, path.waypoints, setTransition]);
 
   return (
     <>
