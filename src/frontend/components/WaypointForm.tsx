@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { WaypointPayload } from '../../shared/Payloads';
 import { Waypoint } from '../../shared/models/Waypoint';
@@ -23,6 +23,7 @@ export const WaypointForm: FC<WaypointFormProps> = ({
     latitude: initialWaypoint?.latitude ?? 0,
     longitude: initialWaypoint?.longitude ?? 0,
   });
+  const [enteringMan, setEnteringMan] = useState(onMap);
 
   const handleSubmission = useCallback(() => {
     submit(waypoint);
@@ -59,15 +60,25 @@ export const WaypointForm: FC<WaypointFormProps> = ({
           }}
         />
         <br />
-        {onMap ? (
+        {onMap && enteringMan ? (
           <>
+            <Label for="latitude">Method to set Latitude & Longitude (optional): </Label>
+            <br />
             <Button
               color="primary"
               onClick={() => {
                 closeForm();
               }}
             >
-              change location by clicking map
+              Clicking map
+            </Button>{' '}
+            <Button
+              color="primary"
+              onClick={() => {
+                setEnteringMan(false);
+              }}
+            >
+              Enter manually
             </Button>
             <br />
             <br />
