@@ -1,0 +1,16 @@
+@import 'variables';
+@import 'bootstrap';
+
+h4{
+    color: $color-medium;
+    font-weight: bold;
+}
+
+.card-body{
+    a{
+        text-decoration:none;
+    }
+    h4{
+        color: $color-darkest
+    }
+}
