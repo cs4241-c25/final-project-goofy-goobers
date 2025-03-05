@@ -170,6 +170,7 @@ export const TrailMap: FC<{
               submit={addWaypoint}
               closeForm={() => {
                 setAreAdding(false);
+                setModalTime(false);
               }}
             />
           </ModalBody>
