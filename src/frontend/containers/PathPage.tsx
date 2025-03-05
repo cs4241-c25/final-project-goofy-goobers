@@ -120,6 +120,7 @@ export const PathPage: FC = () => {
       )}
       {isPlaying && (
         <>
+          <h1>Path: {path.name}</h1>
           <PlayMode
             path={path}
             refresh={fetchPath}
