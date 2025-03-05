@@ -29,7 +29,7 @@ export const PathCard: FC<{
   }, [path]);
 
   const rawMinutes = (distance / 5) * 60;
-  const minutes = rawMinutes % 60;
+  const minutes = (rawMinutes % 60).toPrecision(0);
   const rawHours = Math.floor(rawMinutes / 60);
   const days = Math.floor(rawHours / 24);
   const hours = rawHours % 24;
@@ -44,7 +44,7 @@ export const PathCard: FC<{
           <h5>{'Owner: ' + path.owner.username}</h5>
           {path.waypoints.length > 1 && (
             <>
-              <b>{`Distance: ${distance}km`}</b>
+              <b>{`Distance: ${distance.toPrecision(2)}km`}</b>
               <br />
               {days > 0 ? (
                 <b>{`Estimated Time: ${days} days, ${hours} hours, ${minutes} minutes`}</b>
