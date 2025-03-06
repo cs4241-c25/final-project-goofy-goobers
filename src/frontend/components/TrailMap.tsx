@@ -148,7 +148,7 @@ export const TrailMap: FC<{
                 pathId={path.id}
                 waypoint={wp}
                 key={wp.id}
-                owner={areAdding ? '' : path.owner.username} // make it so you can't edit in add mode
+                owner={path.owner.username} // make it so you can't edit in add mode
                 onMap={true}
                 getLatLng={(waypoint: WaypointPayload) => {
                   setAreEditing(true);
@@ -158,6 +158,10 @@ export const TrailMap: FC<{
                   if (waypoint.description) {
                     setDescription(waypoint.description);
                   }
+                }}
+                cancelClick={() => {
+                  setAreAdding(false);
+                  setAreEditing(false);
                 }}
               />
             </Popup>
@@ -214,7 +218,7 @@ export const TrailMap: FC<{
           pathId={path.id}
           waypoint={wp}
           key={wp.id}
-          owner={areAdding ? '' : path.owner.username} // make it so you can't edit in add mode
+          owner={path.owner.username}
           onMap={true}
           getLatLng={(waypoint: WaypointPayload) => {
             setAreEditing(true);

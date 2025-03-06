@@ -23,7 +23,8 @@ export const WaypointCard: FC<{
   readonly owner: string;
   readonly onMap?: boolean;
   readonly getLatLng?: (wp: WaypointPayload) => void;
-}> = ({ waypoint, pathId, refresh, owner, onMap = false, getLatLng }) => {
+  readonly cancelClick?: () => void;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false, getLatLng, cancelClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
@@ -69,6 +70,10 @@ export const WaypointCard: FC<{
           <CardFooter className="float-right">
             <Button
               onClick={() => {
+                // for clicking on edit it add mode on TrialMap
+                if (cancelClick) {
+                  cancelClick();
+                }
                 setIsEditing(true);
               }}
             >
@@ -76,6 +81,10 @@ export const WaypointCard: FC<{
             </Button>{' '}
             <Button
               onClick={() => {
+                // for clicking on delete it add mode on TrialMap
+                if (cancelClick) {
+                  cancelClick();
+                }
                 setIsDeleting(true);
               }}
               color="danger"
