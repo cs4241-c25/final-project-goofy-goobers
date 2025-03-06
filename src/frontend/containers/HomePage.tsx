@@ -36,7 +36,7 @@ export const HomePage: FC = () => {
       {!loading && yourPaths.length > 0 && (
         <Row>
           {yourPaths.map((path) => (
-            <Col key={path.id} sm="8" md="6" lg="4">
+            <Col key={path.id} sm="8" md="6" lg="4" className="mb-4">
               <PathCard path={path} />
               <br />
             </Col>
@@ -47,7 +47,7 @@ export const HomePage: FC = () => {
       {!loading && (
         <Row>
           {paths.map((path) => (
-            <Col key={path.id} sm="8" md="4" lg="4">
+            <Col key={path.id} sm="8" md="4" lg="4" className="mb-4">
               <PathCard path={path} />
               <br />
             </Col>

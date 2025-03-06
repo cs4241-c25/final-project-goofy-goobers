@@ -36,7 +36,7 @@ export const PathCard: FC<{
 
   return (
     <>
-      <Card className={}>
+      <Card className="h-100">
         <CardBody>
           <Link to={'/view-path/' + path.id}>
             <h4>{path.name}</h4>
