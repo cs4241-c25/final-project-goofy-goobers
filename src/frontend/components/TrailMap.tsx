@@ -14,9 +14,9 @@ import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
-import { captureError } from '../utils';
-import validWaypoint from '../validWaypoint';
+import { captureError, validWaypoint } from '../utils';
 import L from 'leaflet';
+import { toast } from 'react-toastify';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -43,7 +43,11 @@ export const TrailMap: FC<{
 
   const addWaypoint = useCallback(
     (waypoint: WaypointPayload) => {
-      if (!validWaypoint(waypoint)) {
+      const status = validWaypoint(waypoint);
+      if (!status.valid) {
+        for (const msg of status.errors) {
+          toast.error(msg);
+        }
         return;
       }
 
@@ -60,9 +64,14 @@ export const TrailMap: FC<{
 
   const editWaypoint = useCallback(
     (waypoint: WaypointPayload) => {
-      if (!validWaypoint(waypoint)) {
+      const status = validWaypoint(waypoint);
+      if (!status.valid) {
+        for (const msg of status.errors) {
+          toast.error(msg);
+        }
         return;
       }
+
       api
         .editWaypoint(path.id, wid, waypoint)
         .then(() => {

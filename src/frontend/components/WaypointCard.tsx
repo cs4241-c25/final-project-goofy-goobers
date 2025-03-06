@@ -10,12 +10,12 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
-import { captureError } from '../utils';
+import { captureError, validWaypoint } from '../utils';
 import { Waypoint } from '../../shared/models/Waypoint';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { UserContext } from '../services/providers';
-import validWaypoint from '../validWaypoint';
+import { toast } from 'react-toastify';
 
 export const WaypointCard: FC<{
   readonly waypoint: Waypoint;
@@ -32,7 +32,11 @@ export const WaypointCard: FC<{
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
-      if (!validWaypoint(payload)) {
+      const status = validWaypoint(waypoint);
+      if (!status.valid) {
+        for (const msg of status.errors) {
+          toast.error(msg);
+        }
         return;
       }
 
@@ -44,7 +48,7 @@ export const WaypointCard: FC<{
         })
         .catch(captureError);
     },
-    [pathId, refresh, waypoint.id],
+    [pathId, refresh, waypoint],
   );
   const deleteWaypoint = useCallback(() => {
     api
