@@ -16,6 +16,7 @@ import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { captureError } from '../utils';
 import L from 'leaflet';
+import { toast } from 'react-toastify';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -38,6 +39,16 @@ export const TrailMap: FC<{
 
   const addWaypoint = useCallback(
     (waypoint: WaypointPayload) => {
+      let failed = false;
+
+      if (!waypoint.name) {
+        failed = true;
+        toast.error('Please provide a name for the waypoint');
+      }
+      if (failed) {
+        return;
+      }
+
       api
         .createWaypoint(path.id, waypoint)
         .then(() => {
