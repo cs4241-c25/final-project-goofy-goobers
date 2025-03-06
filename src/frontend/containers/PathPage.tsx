@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap';
+import React, { FC, useCallback, useEffect, useContext, useState } from 'react';
+import { Modal, ModalBody, ModalHeader, Spinner, Button } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { useParams } from 'react-router-dom';
 import { captureError } from '../utils';
@@ -8,6 +8,8 @@ import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
 import { WaypointCard } from '../components/WaypointCard';
+import { PlayMode } from '../components/PlayMode';
+import { UserContext } from '../services/providers';
 
 export const PathPage: FC = () => {
   const { pathId } = useParams();
@@ -15,6 +17,9 @@ export const PathPage: FC = () => {
   const [path, setPath] = useState<Path | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const { user } = useContext(UserContext);
 
   const fetchPath = useCallback(() => {
     api
@@ -53,33 +58,63 @@ export const PathPage: FC = () => {
 
   return (
     <>
-      {/* TrailMap now includes the title of the trail */}
-      <TrailMap path={path} refresh={fetchPath} key={path.id} />
-      {path.waypoints.map((wp) => (
-        <WaypointCard
-          refresh={fetchPath}
-          pathId={path.id}
-          waypoint={wp}
-          owner={path.owner.username}
-          key={wp.id}
-        />
-      ))}
-      <Modal
-        isOpen={creating}
-        toggle={() => {
-          setCreating(!creating);
-        }}
-      >
-        <ModalHeader>New Waypoint</ModalHeader>
-        <ModalBody>
-          <WaypointForm
-            submit={addWaypoint}
-            closeForm={() => {
-              setCreating(false);
+      {!isPlaying && (
+        <>
+          <TrailMap path={path} refresh={fetchPath} key={path.id} />
+          {path.waypoints.map((wp) => (
+            <WaypointCard
+              refresh={fetchPath}
+              pathId={path.id}
+              waypoint={wp}
+              owner={path.owner.username}
+              key={wp.id}
+            />
+          ))}
+          {path.waypoints.length > 0 && (
+            <>
+              <div className="text-center">
+                <Button
+                  color="success"
+                  className="mt-3 mb-3"
+                  onClick={() => {
+                    setIsPlaying(true);
+                  }}
+                >
+                  Enter Play Mode
+                </Button>
+              </div>
+            </>
+          )}
+          <Modal
+            isOpen={creating}
+            toggle={() => {
+              setCreating(!creating);
+            }}
+          >
+            <ModalHeader>New Waypoint</ModalHeader>
+            <ModalBody>
+              <WaypointForm
+                submit={addWaypoint}
+                closeForm={() => {
+                  setCreating(false);
+                }}
+              />
+            </ModalBody>
+          </Modal>
+        </>
+      )}
+      {isPlaying && (
+        <>
+          <h1>Path: {path.name}</h1>
+          <PlayMode
+            path={path}
+            refresh={fetchPath}
+            exitPlayMode={() => {
+              setIsPlaying(false);
             }}
           />
-        </ModalBody>
-      </Modal>
+        </>
+      )}
     </>
   );
 };
