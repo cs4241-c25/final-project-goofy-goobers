@@ -21,7 +21,7 @@ export const WaypointForm: FC<WaypointFormProps> = ({
 }) => {
   const [waypoint, setWaypoint] = useObjectState<WaypointPayload>({
     name: initialWaypoint?.name ?? '',
-    description: initialWaypoint?.description,
+    description: initialWaypoint?.description ? initialWaypoint.description : undefined, // account for ''
     latitude: initialWaypoint?.latitude ?? 0,
     longitude: initialWaypoint?.longitude ?? 0,
   });

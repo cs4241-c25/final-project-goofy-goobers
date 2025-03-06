@@ -141,7 +141,7 @@ export const TrailMap: FC<{
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {path.waypoints.map((wp, index) => (
-          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon(index)}>
+          <Marker position={[wp.latitude, wp.longitude]} key={wp.id} icon={customIcon(index + 1)}>
             <Popup>
               <WaypointCard // see 213 for duplicate
                 refresh={refresh}
