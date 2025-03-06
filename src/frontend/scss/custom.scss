@@ -5,11 +5,11 @@ body{
     background-color: $color-medium;
 }
 
-h1, h2, h5, p {
+h1, h2, h4, h5, p {
     color: $color-white;
 }
-h4{
-    color: $color-white;
+
+h1, h2, h4{
     font-weight: bold;
 }
 
@@ -47,7 +47,11 @@ h4{
     background-color: $color-darkest;
     color: $color-white;
     border: 1px solid $color-tan;
+}
 
+.modal-content{
+    background-color: $color-medium;
+    color: $color-white;
 }
 
 .form-label{
@@ -62,8 +66,13 @@ h4{
     border-bottom: none;
 }
 
+.margin-top-bottom{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .margin-bottom{
-    margin: 6px;
+    margin-bottom: 6px;
 }
 
 .success-button{
