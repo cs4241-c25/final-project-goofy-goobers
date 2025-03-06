@@ -36,6 +36,16 @@ export const WaypointCard: FC<{
         failed = true;
         toast.error('Please provide a name for the waypoint');
       }
+      if (payload.longitude > 180 || payload.longitude < -180) {
+        failed = true;
+        toast.error('Longitude value must be from -180 to 180');
+      }
+      if (payload.latitude > 90 || payload.latitude < -90) {
+        failed = true;
+        toast.error('Latitude value must be from -90 to 90');
+      }
+      console.log(waypoint.latitude);
+      console.log(waypoint.longitude);
       if (failed) {
         return;
       }
@@ -47,7 +57,7 @@ export const WaypointCard: FC<{
         })
         .catch(captureError);
     },
-    [pathId, refresh, waypoint.id],
+    [pathId, refresh, waypoint.id, waypoint.latitude, waypoint.longitude],
   );
   const deleteWaypoint = useCallback(() => {
     api

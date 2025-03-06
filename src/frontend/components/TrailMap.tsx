@@ -45,6 +45,14 @@ export const TrailMap: FC<{
         failed = true;
         toast.error('Please provide a name for the waypoint');
       }
+      if (waypoint.longitude > 180 || waypoint.longitude < -180) {
+        failed = true;
+        toast.error('Longitude value must be from -180 to 180');
+      }
+      if (waypoint.latitude > 90 || waypoint.latitude < -90) {
+        failed = true;
+        toast.error('Latitude value must be from -90 to 90');
+      }
       if (failed) {
         return;
       }
