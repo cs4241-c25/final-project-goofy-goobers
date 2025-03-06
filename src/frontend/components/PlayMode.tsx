@@ -105,6 +105,7 @@ export const PlayMode: FC<PlayModeProps> = ({ path, exitPlayMode }) => {
                   onClick={() => {
                     handleArrival();
                   }}
+                  color="success"
                 >
                   Arrived
                 </Button>

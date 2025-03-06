@@ -210,7 +210,7 @@ export const TrailMap: FC<{
           color="RGB(222, 209, 179)"
           weight={5}
           pathOptions={{
-            color: 'RGB(222, 209, 179)', // Main line color
+            color: '#242424',
             weight: 5,
             opacity: 1,
             fillOpacity: 1,
