@@ -36,7 +36,7 @@ export const PathCard: FC<{
 
   return (
     <>
-      <Card>
+      <Card className="h-100">
         <CardBody>
           <Link to={'/view-path/' + path.id}>
             <h4>{path.name}</h4>
@@ -44,12 +44,12 @@ export const PathCard: FC<{
           <h5>{'Owner: ' + path.owner.username}</h5>
           {path.waypoints.length > 1 && (
             <>
-              <b>{`Distance: ${distance.toPrecision(2)}km`}</b>
+              <b>{`Distance: ${distance.toPrecision(3)}km`}</b>
               <br />
               {days > 0 ? (
                 <b>{`Estimated Time: ${days} days, ${hours} hours, ${minutes} minutes`}</b>
               ) : hours > 0 ? (
-                <b>{`Estimated Time: ${hours} hours ${minutes} minutes`}</b>
+                <b>{`Estimated Time: ${hours} hours, ${minutes} minutes`}</b>
               ) : (
                 <b>{`Estimated Time: ${minutes} minutes`}</b>
               )}
