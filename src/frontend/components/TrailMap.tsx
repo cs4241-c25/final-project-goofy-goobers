@@ -15,8 +15,8 @@ import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { captureError } from '../utils';
+import validWaypoint from '../validWaypoint';
 import L from 'leaflet';
-import { toast } from 'react-toastify';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -40,22 +40,6 @@ export const TrailMap: FC<{
   const { user } = useContext(UserContext); // change to be passed down
 
   const centerPoint = calculateCenter(path);
-
-  const validWaypoint = (waypoint: WaypointPayload) => {
-    if (!waypoint.name) {
-      toast.error('Please provide a name for the waypoint');
-      return false;
-    }
-    if (waypoint.longitude > 180 || waypoint.longitude < -180) {
-      toast.error('Longitude value must be from -180 to 180');
-      return false;
-    }
-    if (waypoint.latitude > 90 || waypoint.latitude < -90) {
-      toast.error('Latitude value must be from -90 to 90');
-      return false;
-    }
-    return true;
-  };
 
   const addWaypoint = useCallback(
     (waypoint: WaypointPayload) => {

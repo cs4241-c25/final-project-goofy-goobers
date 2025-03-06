@@ -15,7 +15,7 @@ import { Waypoint } from '../../shared/models/Waypoint';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { UserContext } from '../services/providers';
-import { toast } from 'react-toastify';
+import validWaypoint from '../validWaypoint';
 
 export const WaypointCard: FC<{
   readonly waypoint: Waypoint;
@@ -32,25 +32,11 @@ export const WaypointCard: FC<{
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
-      let failed = false;
-
-      if (!payload.name) {
-        failed = true;
-        toast.error('Please provide a name for the waypoint');
-      }
-      if (payload.longitude > 180 || payload.longitude < -180) {
-        failed = true;
-        toast.error('Longitude value must be from -180 to 180');
-      }
-      if (payload.latitude > 90 || payload.latitude < -90) {
-        failed = true;
-        toast.error('Latitude value must be from -90 to 90');
-      }
-      console.log(waypoint.latitude);
-      console.log(waypoint.longitude);
-      if (failed) {
+      console.log('here');
+      if (!validWaypoint(payload)) {
         return;
       }
+
       api
         .editWaypoint(pathId, waypoint.id, payload)
         .then(() => {
@@ -76,15 +62,6 @@ export const WaypointCard: FC<{
         <CardBody className={'no-border'}>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {/*{isEditing && ( // keeping editing from non-map the way it is*/}
-          {/*  <WaypointForm*/}
-          {/*    initialWaypoint={waypoint}*/}
-          {/*    closeForm={() => {*/}
-          {/*      setIsEditing(false);*/}
-          {/*    }}*/}
-          {/*    submit={submitEdit}*/}
-          {/*  />*/}
-          {/*)}*/}
         </CardBody>
         {!isEditing && owner === user?.username && (
           <CardFooter className="float-right">
@@ -114,8 +91,6 @@ export const WaypointCard: FC<{
           </CardFooter>
         )}
       </Card>
-
-      {/* todo: test out translucent?, would be nice to see the map while editing */}
 
       <Modal
         toggle={() => {
