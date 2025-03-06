@@ -36,7 +36,7 @@ export const PathCard: FC<{
 
   return (
     <>
-      <Card>
+      <Card className={}>
         <CardBody>
           <Link to={'/view-path/' + path.id}>
             <h4>{path.name}</h4>
@@ -49,7 +49,7 @@ export const PathCard: FC<{
               {days > 0 ? (
                 <b>{`Estimated Time: ${days} days, ${hours} hours, ${minutes} minutes`}</b>
               ) : hours > 0 ? (
-                <b>{`Estimated Time: ${hours} hours ${minutes} minutes`}</b>
+                <b>{`Estimated Time: ${hours} hours, ${minutes} minutes`}</b>
               ) : (
                 <b>{`Estimated Time: ${minutes} minutes`}</b>
               )}
