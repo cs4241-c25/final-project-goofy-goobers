@@ -83,7 +83,6 @@ export const TrailMap: FC<{
   const HandleOnClick: FC = () => {
     useMapEvents({
       click(e) {
-        console.log('here');
         setLat(e.latlng.lat);
         setLng(e.latlng.lng);
         setModalTime(true);
@@ -117,6 +116,7 @@ export const TrailMap: FC<{
               color={areAdding ? 'secondary' : 'primary'}
               onClick={() => {
                 setAreAdding(!areAdding);
+                setAreEditing(false);
               }}
             >
               {areAdding ? 'Adding Waypoint (Click Map)' : 'Add New Waypoint'}
@@ -147,10 +147,11 @@ export const TrailMap: FC<{
                 pathId={path.id}
                 waypoint={wp}
                 key={wp.id}
-                owner={path.owner.username}
+                owner={areAdding ? '' : path.owner.username} // make it so you cant edit in add mode
                 onMap={true}
                 getLatLng={(waypoint: WaypointPayload) => {
                   setAreEditing(true);
+                  setAreAdding(false);
                   setWid(wp.id);
                   setName(waypoint.name);
                   if (waypoint.description) {
