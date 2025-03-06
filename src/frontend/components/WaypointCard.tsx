@@ -32,7 +32,6 @@ export const WaypointCard: FC<{
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
-      console.log('here');
       if (!validWaypoint(payload)) {
         return;
       }
@@ -45,7 +44,7 @@ export const WaypointCard: FC<{
         })
         .catch(captureError);
     },
-    [pathId, refresh, waypoint.id, waypoint.latitude, waypoint.longitude],
+    [pathId, refresh, waypoint.id],
   );
   const deleteWaypoint = useCallback(() => {
     api

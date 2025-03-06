@@ -57,15 +57,6 @@ export const PathPage: FC = () => {
       {!isPlaying && (
         <>
           <TrailMap path={path} refresh={fetchPath} key={path.id} />
-          {/*{path.waypoints.map((wp) => (*/}
-          {/*  <WaypointCard*/}
-          {/*    refresh={fetchPath}*/}
-          {/*    pathId={path.id}*/}
-          {/*    waypoint={wp}*/}
-          {/*    owner={path.owner.username}*/}
-          {/*    key={wp.id}*/}
-          {/*  />*/}
-          {/*))}*/}
           {path.waypoints.length > 0 && (
             <>
               <div className="text-center">
