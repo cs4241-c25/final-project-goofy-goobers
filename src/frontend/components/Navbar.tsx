@@ -35,7 +35,7 @@ export const AppNavbar: FC = () => {
   }, [setUser, navigate]);
 
   return (
-    <Navbar color="dark" dark expand="md">
+    <Navbar dark expand="md">
       <NavbarBrand tag={Link} to="/">
         TrailBlazer
       </NavbarBrand>
@@ -74,7 +74,7 @@ export const AppNavbar: FC = () => {
               <NavbarText className={'me-3'}>Welcome, {user.name}</NavbarText>
               <NavItem>
                 <Button
-                  color="secondary"
+                  className={"no-border"}
                   onClick={() => {
                     handleLogout();
                   }}

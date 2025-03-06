@@ -30,13 +30,14 @@ export const HomePage: FC = () => {
 
   return (
     <>
-      <h1>Welcome to TrailBlazer</h1>
+      <h1 className={'margin-top-bottom'}>Welcome to TrailBlazer</h1>
       <p>Choose a Path below and follow along with each Waypoint.</p>
+      <br />
       {!loading && yourPaths.length > 0 && <h2>Your Paths:</h2>}
       {!loading && yourPaths.length > 0 && (
         <Row>
           {yourPaths.map((path) => (
-            <Col key={path.id} sm="8" md="6" lg="4">
+            <Col key={path.id} sm="8" md="6" lg="4" className="mb-4">
               <PathCard path={path} />
               <br />
             </Col>
@@ -47,7 +48,7 @@ export const HomePage: FC = () => {
       {!loading && (
         <Row>
           {paths.map((path) => (
-            <Col key={path.id} sm="8" md="4" lg="4">
+            <Col key={path.id} sm="8" md="4" lg="4" className="mb-4">
               <PathCard path={path} />
               <br />
             </Col>
