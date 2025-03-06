@@ -44,7 +44,7 @@ export const PathCard: FC<{
           <h5>{'Owner: ' + path.owner.username}</h5>
           {path.waypoints.length > 1 && (
             <>
-              <b>{`Distance: ${distance.toPrecision(2)}km`}</b>
+              <b>{`Distance: ${distance.toPrecision(3)}km`}</b>
               <br />
               {days > 0 ? (
                 <b>{`Estimated Time: ${days} days, ${hours} hours, ${minutes} minutes`}</b>
