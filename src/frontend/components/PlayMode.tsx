@@ -101,7 +101,7 @@ export const PlayMode: FC<PlayModeProps> = ({ path, exitPlayMode }) => {
             <>
               <div className="mb-2">
                 <Button
-                  className={'success-button'}
+                  className={'btn-success'}
                   onClick={() => {
                     handleArrival();
                   }}
@@ -110,7 +110,7 @@ export const PlayMode: FC<PlayModeProps> = ({ path, exitPlayMode }) => {
                 </Button>
               </div>
               <div className="mb-2">
-                <Button className={'secondary-button'} onClick={handleOpenMapping}>
+                <Button className={'btn-secondary'} onClick={handleOpenMapping}>
                   Navigate
                 </Button>
               </div>
@@ -137,8 +137,8 @@ export const PlayMode: FC<PlayModeProps> = ({ path, exitPlayMode }) => {
           )}
         </div>
 
-        <div className="text-center mt-3">
-          <Button className={'danger-button'} onClick={exitPlayMode}>
+        <div className="text-center mt-3 mb-3">
+          <Button className={'btn-danger'} onClick={exitPlayMode}>
             Exit Play Mode
           </Button>
         </div>
