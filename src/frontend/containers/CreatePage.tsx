@@ -53,7 +53,7 @@ export const CreatePage: FC = () => {
             descriptionChange(e.currentTarget.value); //when description is updated
           }}
         ></Input>
-        <br/>
+        <br />
         <Button
           id={'createButton'}
           onClick={() => {
