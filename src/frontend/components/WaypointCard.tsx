@@ -50,8 +50,8 @@ export const WaypointCard: FC<{
 
   return (
     <>
-      <Card>
-        <CardBody>
+      <Card className={"margin-bottom"}>
+        <CardBody className={"no-border"}>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
           {isEditing &&

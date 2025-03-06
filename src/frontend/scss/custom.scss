@@ -1,16 +1,82 @@
 @import 'variables';
 @import 'bootstrap';
 
+body{
+    background-color: $color-medium;
+}
+
+h1, h2, h5, p {
+    color: $color-white;
+}
 h4{
-    color: $color-medium;
+    color: $color-white;
     font-weight: bold;
 }
 
+.card{
+    border: solid 3px $color-tan;
+}
+
 .card-body{
+    background-color: $color-dark;
+    color: $color-white;
     a{
         text-decoration:none;
     }
     h4{
-        color: $color-darkest
+        color: $color-white;
+        font-family: $font-family-sans-serif;
     }
+}
+
+.card-footer{
+    background-color: $color-medium;
+    border: none;
+}
+
+.navbar{
+    background-color: $color-darkest;
+}
+
+
+.nav-link, .navbar-text{
+    color: $color-white;
+}
+
+.btn{
+    background-color: $color-darkest;
+    color: $color-white;
+    border: 1px solid $color-tan;
+
+}
+
+.form-label{
+    color: $color-white;
+}
+
+.no-border{
+    border: none;
+}
+
+.no-border-bottom{
+    border-bottom: none;
+}
+
+.margin-bottom{
+    margin: 6px;
+}
+
+.success-button{
+    background-color: $color-success;
+    border-color: $color-dark;
+}
+
+.secondary-button{
+    background-color: $color-secondary;
+    border-color: $color-dark;
+}
+
+.danger-button{
+    background-color: $color-danger;
+    border-color: $color-dark;
 }
