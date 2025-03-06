@@ -14,7 +14,7 @@ import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
-import { captureError, useObjectState } from '../utils';
+import { captureError } from '../utils';
 import L from 'leaflet';
 
 export const TrailMap: FC<{
@@ -177,9 +177,9 @@ export const TrailMap: FC<{
         {areAdding && <HandleOnClick />}
         {areEditing && <HandleOnClick />}
       </MapContainer>
-      {modalTime && (
+      {modalTime && !(areAdding && areEditing) && (
         <Modal
-          isOpen={areAdding || areEditing}
+          isOpen={(areAdding || areEditing) && !(areAdding && areEditing)}
           toggle={() => {
             if (areAdding) {
               setAreAdding(!areAdding);
