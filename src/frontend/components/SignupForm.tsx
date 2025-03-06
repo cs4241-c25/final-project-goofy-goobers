@@ -38,6 +38,10 @@ export const SignupForm: FC<SignupFormProps> = ({ submit }) => {
       toast.error('Signup Failed: Please complete all fields.');
       return;
     }
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|info)$/.test(form.email)) {
+      toast.error(`Signup Failed: You need a valid email`);
+      return;
+    }
 
     submit(form);
   }, [submit, form]);

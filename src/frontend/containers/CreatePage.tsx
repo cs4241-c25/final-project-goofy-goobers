@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { Button, Form, Input, Label } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { captureError } from '../utils';
+import { toast } from 'react-toastify';
 
 export const CreatePage: FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,19 @@ export const CreatePage: FC = () => {
 
   //creates new path and route to new page
   const clickCreate = () => {
+    let failed = false;
+
+    if (!path.name) {
+      failed = true;
+      toast.error(`Please provide path name`);
+    }
+    if (!path.description) {
+      failed = true;
+      toast.error(`Please provide a path description`);
+    }
+    if (failed) {
+      return;
+    }
     api
       .createPath(path.name, path.description) //call to create path endpoint
       .then(async (path) => {
