@@ -64,7 +64,7 @@ export const WaypointMap: FC<{
         ))}
         <Polyline
           positions={waypoints.map((wp) => [wp.latitude, wp.longitude] as [number, number])}
-          color="RGB(222, 209, 179)"
+          color="#242424"
         />
 
         <FitBounds waypoints={waypoints} />
