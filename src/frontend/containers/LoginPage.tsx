@@ -24,5 +24,10 @@ export const LoginPage: FC = () => {
     [setUser, navigate],
   );
 
-  return <LoginForm submit={handleLogin} />;
+  return (
+    <>
+      <h1>Log In</h1>
+      <LoginForm submit={handleLogin} />
+    </>
+  );
 };

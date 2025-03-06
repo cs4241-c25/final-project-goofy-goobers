@@ -64,7 +64,9 @@ export const LoginForm: FC<LoginFormProps> = ({ submit }) => {
         <br />
         <Button
           color="success"
-          onClick={() => {
+          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
             handleSubmission();
           }}
         >
