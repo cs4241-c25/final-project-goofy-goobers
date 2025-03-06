@@ -110,7 +110,7 @@ export const TrailMap: FC<{
   return (
     <>
       <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
-        <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
+        <h2 style={{ margin: 0 }}>Viewing: {path.name}</h2>
         {path.owner.username === user?.username && (
           <div className="float-right">
             <Button
