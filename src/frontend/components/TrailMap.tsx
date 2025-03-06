@@ -8,7 +8,16 @@ import {
   Polyline,
   useMapEvents,
 } from 'react-leaflet';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
@@ -18,11 +27,13 @@ import { captureError, validWaypoint } from '../utils';
 import L from 'leaflet';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 
 export const TrailMap: FC<{
   readonly path: Path;
   readonly refresh: () => void;
-}> = ({ path, refresh }) => {
+  readonly startPlay: () => void;
+}> = ({ path, refresh, startPlay }) => {
   const calculateCenter = (path: Path): [number, number] => {
     const [sumLat, sumLong, count] = path.waypoints.reduce(
       ([accLat, accLong, count], wp) => [accLat + wp.latitude, accLong + wp.longitude, count + 1],
@@ -282,25 +293,69 @@ export const TrailMap: FC<{
           </ModalBody>
         </Modal>
       )}
-      {path.waypoints.map((wp) => (
-        <WaypointCard // see 147 for duplicate
-          refresh={refresh}
-          pathId={path.id}
-          waypoint={wp}
-          key={wp.id}
-          owner={path.owner.username}
-          onMap={true}
-          getLatLng={(waypoint: WaypointPayload) => {
-            setAreEditing(true);
-            setAreAdding(false);
-            setWid(wp.id);
-            setName(waypoint.name);
-            if (waypoint.description) {
-              setDescription(waypoint.description);
-            }
-          }}
-        />
-      ))}
+
+      <>
+        {' '}
+        <Container fluid className="p-4">
+          <Row className="justify-content-center">
+            <Col xs="12" className="d-md-none text-center mb-3">
+              {path.waypoints.length > 0 && (
+                <>
+                  <div className="text-center">
+                    <Button color="success" className="mt-3 mb-3" onClick={startPlay}>
+                      Enter Play Mode
+                    </Button>
+                  </div>
+                </>
+              )}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs="12" md="8">
+              {path.waypoints.map((wp) => (
+                <WaypointCard // see 147 for duplicate
+                  refresh={refresh}
+                  pathId={path.id}
+                  waypoint={wp}
+                  key={wp.id}
+                  owner={path.owner.username}
+                  onMap={true}
+                  getLatLng={(waypoint: WaypointPayload) => {
+                    setAreEditing(true);
+                    setAreAdding(false);
+                    setWid(wp.id);
+                    setName(waypoint.name);
+                    if (waypoint.description) {
+                      setDescription(waypoint.description);
+                    }
+                  }}
+                />
+              ))}
+            </Col>
+
+            <Col xs="12" md="4" className="text-center">
+              {path.waypoints.length > 0 && (
+                <>
+                  <div className="d-none d-md-block mb-3">
+                    <Button color="success" className="mt-3 mb-3" onClick={startPlay}>
+                      Enter Play Mode
+                    </Button>
+                  </div>
+                </>
+              )}
+              <div className="mt-5">
+                <QRCodeSVG
+                  className="shadow-sm"
+                  value={window.location.href}
+                  size={200}
+                  marginSize={1}
+                />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </>
     </>
   );
 };
