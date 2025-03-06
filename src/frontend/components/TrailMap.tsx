@@ -8,7 +8,7 @@ import {
   Polyline,
   useMapEvents,
 } from 'react-leaflet';
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Path } from '../../shared/models/Path';
 import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
@@ -17,6 +17,7 @@ import { WaypointPayload } from '../../shared/Payloads';
 import { captureError } from '../utils';
 import L from 'leaflet';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -34,6 +35,7 @@ export const TrailMap: FC<{
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
   const { user } = useContext(UserContext); // change to be passed down
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const centerPoint = calculateCenter(path);
 
@@ -93,6 +95,17 @@ export const TrailMap: FC<{
     return null;
   };
 
+  const navigate = useNavigate();
+
+  const handleDelete = useCallback(() => {
+    api
+      .deletePath(path.id)
+      .then(async () => {
+        await navigate('/');
+      })
+      .catch(captureError);
+  }, [navigate, path]);
+
   const customIcon = L.divIcon({
     className: 'custom-dot-icon',
     html: `
@@ -114,6 +127,14 @@ export const TrailMap: FC<{
         <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
         {path.owner.username === user?.username && (
           <div className="float-right">
+            <Button
+              color="danger"
+              onClick={() => {
+                setIsDeleting(true);
+              }}
+            >
+              Delete
+            </Button>{' '}
             <Button
               color={areAdding ? 'secondary' : 'primary'}
               onClick={() => {
@@ -169,6 +190,40 @@ export const TrailMap: FC<{
         <FitBounds path={path} />
         {areAdding && <AddWaypointOnClick />}
       </MapContainer>
+
+      <Modal
+        toggle={() => {
+          setIsDeleting(!isDeleting);
+        }}
+        isOpen={isDeleting}
+      >
+        <ModalHeader>Confirm Deletion</ModalHeader>
+        <ModalBody>
+          Are you sure you&apos;d like to delete <strong>{path.name}</strong>?
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="danger"
+            id="complete"
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            Delete
+          </Button>{' '}
+          <Button
+            color="secondary"
+            id="cancel"
+            onClick={() => {
+              setIsDeleting(false);
+            }}
+            outline
+          >
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       {modalTime && (
         <Modal
           isOpen={areAdding}

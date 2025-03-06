@@ -101,6 +101,16 @@ export class APIClient {
     });
   }
 
+  public async deletePath(pathId: string) {
+    return await this.request<Path>({
+      url: `/api/path/${pathId}/`,
+      method: 'delete',
+      payload: {
+        pathId,
+      },
+    });
+  }
+
   public async createWaypoint(pathId: string, payload: WaypointPayload) {
     return await this.request<Path>({
       url: `/api/path/${pathId}/waypoint`,
