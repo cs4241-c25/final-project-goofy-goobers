@@ -102,7 +102,7 @@ export class APIClient {
   }
 
   public async deletePath(pathId: string) {
-    return await this.request<Path>({
+    await this.request({
       url: `/api/path/${pathId}/`,
       method: 'delete',
       payload: {
