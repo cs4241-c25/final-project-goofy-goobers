@@ -9,6 +9,7 @@ interface WaypointFormProps {
   closeForm: () => void;
   submit: (payload: WaypointPayload) => void;
   onMap?: boolean;
+  getLatLng?: (waypoint: WaypointPayload) => void;
 }
 
 export const WaypointForm: FC<WaypointFormProps> = ({
@@ -16,6 +17,7 @@ export const WaypointForm: FC<WaypointFormProps> = ({
   submit,
   closeForm,
   onMap = false,
+  getLatLng,
 }) => {
   const [waypoint, setWaypoint] = useObjectState<WaypointPayload>({
     name: initialWaypoint?.name ?? '',
@@ -23,7 +25,7 @@ export const WaypointForm: FC<WaypointFormProps> = ({
     latitude: initialWaypoint?.latitude ?? 0,
     longitude: initialWaypoint?.longitude ?? 0,
   });
-  const [enteringMan, setEnteringMan] = useState(onMap);
+  const [enteringMan, setEnteringMan] = useState(false);
 
   const handleSubmission = useCallback(() => {
     submit(waypoint);
@@ -60,22 +62,25 @@ export const WaypointForm: FC<WaypointFormProps> = ({
           }}
         />
         <br />
-        {onMap && enteringMan ? (
+        {onMap && !enteringMan ? (
           <>
             <Label for="latitude">Method to set Latitude & Longitude (optional): </Label>
             <br />
             <Button
               color="primary"
               onClick={() => {
-                closeForm();
+                if (getLatLng) {
+                  getLatLng(waypoint);
+                  closeForm();
+                }
               }}
             >
-              Clicking map
+              Click on map
             </Button>{' '}
             <Button
               color="primary"
               onClick={() => {
-                setEnteringMan(false);
+                setEnteringMan(true);
               }}
             >
               Enter manually

@@ -22,7 +22,8 @@ export const WaypointCard: FC<{
   readonly refresh: () => void;
   readonly owner: string;
   readonly onMap?: boolean;
-}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
+  readonly getLatLng?: (wp: WaypointPayload) => void;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false, getLatLng }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
@@ -102,6 +103,7 @@ export const WaypointCard: FC<{
             }}
             submit={submitEdit}
             onMap={onMap}
+            getLatLng={getLatLng}
           />
         </ModalBody>
       </Modal>

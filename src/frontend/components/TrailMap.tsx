@@ -14,7 +14,7 @@ import { WaypointCard } from './WaypointCard';
 import { UserContext } from '../services/providers';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
-import { captureError } from '../utils';
+import { captureError, useObjectState } from '../utils';
 import L from 'leaflet';
 
 export const TrailMap: FC<{
@@ -30,8 +30,12 @@ export const TrailMap: FC<{
   };
   const [areAdding, setAreAdding] = useState(false);
   const [modalTime, setModalTime] = useState(false);
+  const [areEditing, setAreEditing] = useState(false);
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
+  const [name, setName] = useState('');
+  const [wid, setWid] = useState('');
+  const [description, setDescription] = useState('');
   const { user } = useContext(UserContext); // change to be passed down
 
   const centerPoint = calculateCenter(path);
@@ -49,6 +53,19 @@ export const TrailMap: FC<{
     [refresh, path],
   );
 
+  const editWaypoint = useCallback(
+    (payload: WaypointPayload) => {
+      api
+        .editWaypoint(path.id, wid, payload)
+        .then(() => {
+          setAreEditing(false);
+          refresh();
+        })
+        .catch(captureError);
+    },
+    [path, refresh, wid],
+  );
+
   const FitBounds: FC<{ path: Path }> = ({ path }) => {
     const map = useMap();
 
@@ -63,9 +80,10 @@ export const TrailMap: FC<{
     return null;
   };
 
-  const AddWaypointOnClick: FC = () => {
+  const HandleOnClick: FC = () => {
     useMapEvents({
       click(e) {
+        console.log('here');
         setLat(e.latlng.lat);
         setLng(e.latlng.lng);
         setModalTime(true);
@@ -91,8 +109,6 @@ export const TrailMap: FC<{
 
   return (
     <>
-      {/* todo: test out different Marker icons other than the blue pin */}
-      {/* todo (time permitting): make the waypoints location update when editing & make waypoints draggable */}
       <div className={'d-flex justify-content-between px-3 pt-2 pb-1 align-items-center'}>
         <h1 style={{ margin: 0 }}>Path: {path.name}</h1>
         {path.owner.username === user?.username && (
@@ -133,6 +149,14 @@ export const TrailMap: FC<{
                 key={wp.id}
                 owner={path.owner.username}
                 onMap={true}
+                getLatLng={(waypoint: WaypointPayload) => {
+                  setAreEditing(true);
+                  setWid(wp.id);
+                  setName(waypoint.name);
+                  if (waypoint.description) {
+                    setDescription(waypoint.description);
+                  }
+                }}
               />
             </Popup>
           </Marker>
@@ -150,28 +174,35 @@ export const TrailMap: FC<{
           }}
         />
         <FitBounds path={path} />
-        {areAdding && <AddWaypointOnClick />}
+        {areAdding && <HandleOnClick />}
+        {areEditing && <HandleOnClick />}
       </MapContainer>
       {modalTime && (
         <Modal
-          isOpen={areAdding}
+          isOpen={areAdding || areEditing}
           toggle={() => {
-            setAreAdding(!areAdding);
+            if (areAdding) {
+              setAreAdding(!areAdding);
+            } else {
+              setAreEditing(!areEditing);
+            }
           }}
         >
           <ModalHeader>New Waypoint</ModalHeader>
           <ModalBody>
             <WaypointForm
               initialWaypoint={{
-                id: 'whatever',
-                path: 'dont care',
-                name: '',
+                id: wid,
+                path: path.id,
+                name: name,
+                description: description,
                 latitude: lat,
                 longitude: lng,
               }}
-              submit={addWaypoint}
+              submit={areAdding ? addWaypoint : editWaypoint}
               closeForm={() => {
                 setAreAdding(false);
+                setAreEditing(false);
                 setModalTime(false);
               }}
             />
