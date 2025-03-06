@@ -197,8 +197,7 @@ export const TrailMap: FC<{
           }}
         />
         <FitBounds path={path} />
-        {areAdding && <HandleOnClick />}
-        {areEditing && <HandleOnClick />}
+        {(areAdding || areEditing) && <HandleOnClick />}
       </MapContainer>
       {modalTime && !(areAdding && areEditing) && (
         <Modal
