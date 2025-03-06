@@ -40,7 +40,6 @@ export const CreatePage: FC = () => {
       .createPath(path.name, path.description) //call to create path endpoint
       .then(async (path) => {
         //route to new page
-        console.log(path);
         await navigate(`/view-path/${path.id}`);
       })
       .catch(captureError);
