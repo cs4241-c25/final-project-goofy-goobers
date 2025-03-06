@@ -1,6 +1,10 @@
 @import 'variables';
 @import 'bootstrap';
 
+h4, h2, h3 {
+    color: $color-medium;
+}
+
 body{
     background-color: $color-medium;
 }

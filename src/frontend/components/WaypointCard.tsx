@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
-import { captureError } from '../utils';
+import { captureError, validWaypoint } from '../utils';
 import { Waypoint } from '../../shared/models/Waypoint';
 import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
@@ -23,32 +23,23 @@ export const WaypointCard: FC<{
   readonly refresh: () => void;
   readonly owner: string;
   readonly onMap?: boolean;
-}> = ({ waypoint, pathId, refresh, owner, onMap = false }) => {
+  readonly getLatLng?: (wp: WaypointPayload) => void;
+  readonly cancelClick?: () => void;
+}> = ({ waypoint, pathId, refresh, owner, onMap = false, getLatLng, cancelClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useContext(UserContext);
 
   const submitEdit = useCallback(
     (payload: WaypointPayload) => {
-      let failed = false;
-
-      if (!payload.name) {
-        failed = true;
-        toast.error('Please provide a name for the waypoint');
-      }
-      if (payload.longitude > 180 || payload.longitude < -180) {
-        failed = true;
-        toast.error('Longitude value must be from -180 to 180');
-      }
-      if (payload.latitude > 90 || payload.latitude < -90) {
-        failed = true;
-        toast.error('Latitude value must be from -90 to 90');
-      }
-      console.log(waypoint.latitude);
-      console.log(waypoint.longitude);
-      if (failed) {
+      const status = validWaypoint(waypoint);
+      if (!status.valid) {
+        for (const msg of status.errors) {
+          toast.error(msg);
+        }
         return;
       }
+
       api
         .editWaypoint(pathId, waypoint.id, payload)
         .then(() => {
@@ -57,7 +48,7 @@ export const WaypointCard: FC<{
         })
         .catch(captureError);
     },
-    [pathId, refresh, waypoint.id, waypoint.latitude, waypoint.longitude],
+    [pathId, refresh, waypoint],
   );
   const deleteWaypoint = useCallback(() => {
     api
@@ -74,21 +65,15 @@ export const WaypointCard: FC<{
         <CardBody className={'no-border'}>
           <h4>{waypoint.name}</h4>
           {waypoint.description && <CardText>{waypoint.description}</CardText>}
-          {isEditing &&
-            !onMap && ( // keeping editing from non-map the way it is
-              <WaypointForm
-                initialWaypoint={waypoint}
-                closeForm={() => {
-                  setIsEditing(false);
-                }}
-                submit={submitEdit}
-              />
-            )}
         </CardBody>
         {!isEditing && owner === user?.username && (
           <CardFooter className="float-right">
             <Button
               onClick={() => {
+                // for clicking on edit it add mode on TrialMap
+                if (cancelClick) {
+                  cancelClick();
+                }
                 setIsEditing(true);
               }}
             >
@@ -96,6 +81,10 @@ export const WaypointCard: FC<{
             </Button>{' '}
             <Button
               onClick={() => {
+                // for clicking on delete it add mode on TrialMap
+                if (cancelClick) {
+                  cancelClick();
+                }
                 setIsDeleting(true);
               }}
               color="danger"
@@ -106,26 +95,25 @@ export const WaypointCard: FC<{
         )}
       </Card>
 
-      {/* todo: test out translucent?, would be nice to see the map while editing */}
-      {onMap && ( // only modal when editing from map, up for scrutiny
-        <Modal
-          toggle={() => {
-            setIsEditing(!isDeleting);
-          }}
-          isOpen={isEditing}
-        >
-          <ModalHeader>Editing {waypoint.name}</ModalHeader>
-          <ModalBody>
-            <WaypointForm
-              initialWaypoint={waypoint}
-              closeForm={() => {
-                setIsEditing(false);
-              }}
-              submit={submitEdit}
-            />
-          </ModalBody>
-        </Modal>
-      )}
+      <Modal
+        toggle={() => {
+          setIsEditing(!isDeleting);
+        }}
+        isOpen={isEditing}
+      >
+        <ModalHeader>Editing {waypoint.name}</ModalHeader>
+        <ModalBody>
+          <WaypointForm
+            initialWaypoint={waypoint}
+            closeForm={() => {
+              setIsEditing(false);
+            }}
+            submit={submitEdit}
+            onMap={onMap}
+            getLatLng={getLatLng}
+          />
+        </ModalBody>
+      </Modal>
 
       <Modal
         toggle={() => {

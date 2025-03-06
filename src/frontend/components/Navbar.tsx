@@ -74,7 +74,7 @@ export const AppNavbar: FC = () => {
               <NavbarText className={'me-3'}>Welcome, {user.name}</NavbarText>
               <NavItem>
                 <Button
-                  className={"no-border"}
+                  className={'no-border'}
                   onClick={() => {
                     handleLogout();
                   }}

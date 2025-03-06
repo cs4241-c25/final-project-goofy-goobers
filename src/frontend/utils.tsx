@@ -7,6 +7,7 @@ import {
   ServerError,
 } from './APIClient';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { WaypointPayload } from '../shared/Payloads';
 
 export const captureError = (err: unknown) => {
   const error = err as Error;
@@ -46,3 +47,31 @@ export function useObjectState<T extends object>(
 
   return [object, dispatch, setObject];
 }
+
+interface WaypointStatus {
+  valid: boolean;
+  errors: string[];
+}
+
+export const validWaypoint = (waypoint: WaypointPayload): WaypointStatus => {
+  const errors: string[] = [];
+  let valid = true;
+
+  if (!waypoint.name) {
+    errors.push('Please provide a name for the waypoint');
+    valid = false;
+  }
+  if (waypoint.longitude > 180 || waypoint.longitude < -180) {
+    errors.push('Longitude value must be from -180 to 180');
+    valid = false;
+  }
+  if (waypoint.latitude > 90 || waypoint.latitude < -90) {
+    errors.push('Latitude value must be from -90 to 90');
+    valid = false;
+  }
+
+  return {
+    valid,
+    errors,
+  };
+};
