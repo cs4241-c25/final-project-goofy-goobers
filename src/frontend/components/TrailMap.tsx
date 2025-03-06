@@ -59,6 +59,7 @@ export const TrailMap: FC<{
         .editWaypoint(path.id, wid, payload)
         .then(() => {
           setAreEditing(false);
+          setModalTime(false);
           refresh();
         })
         .catch(captureError);
@@ -182,14 +183,11 @@ export const TrailMap: FC<{
         <Modal
           isOpen={(areAdding || areEditing) && !(areAdding && areEditing)}
           toggle={() => {
-            if (areAdding) {
-              setAreAdding(!areAdding);
-            } else {
-              setAreEditing(!areEditing);
-            }
+            setAreAdding(false);
+            setAreEditing(false);
           }}
         >
-          <ModalHeader>New Waypoint</ModalHeader>
+          <ModalHeader>{areAdding ? 'New Waypoint' : `Edit ${name}`}</ModalHeader>
           <ModalBody>
             <WaypointForm
               initialWaypoint={{
