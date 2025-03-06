@@ -7,7 +7,6 @@ import { WaypointForm } from '../components/WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { toast } from 'react-toastify';
 import { TrailMap } from '../components/TrailMap';
-import { WaypointCard } from '../components/WaypointCard';
 import { PlayMode } from '../components/PlayMode';
 import { UserContext } from '../services/providers';
 
@@ -18,9 +17,7 @@ export const PathPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const { user } = useContext(UserContext);
-
+  
   const fetchPath = useCallback(() => {
     api
       .getPath(pathId)
@@ -61,15 +58,15 @@ export const PathPage: FC = () => {
       {!isPlaying && (
         <>
           <TrailMap path={path} refresh={fetchPath} key={path.id} />
-          {path.waypoints.map((wp) => (
-            <WaypointCard
-              refresh={fetchPath}
-              pathId={path.id}
-              waypoint={wp}
-              owner={path.owner.username}
-              key={wp.id}
-            />
-          ))}
+          {/*{path.waypoints.map((wp) => (*/}
+          {/*  <WaypointCard*/}
+          {/*    refresh={fetchPath}*/}
+          {/*    pathId={path.id}*/}
+          {/*    waypoint={wp}*/}
+          {/*    owner={path.owner.username}*/}
+          {/*    key={wp.id}*/}
+          {/*  />*/}
+          {/*))}*/}
           {path.waypoints.length > 0 && (
             <>
               <div className="text-center">

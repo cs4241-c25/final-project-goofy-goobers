@@ -16,6 +16,7 @@ import { WaypointForm } from './WaypointForm';
 import { WaypointPayload } from '../../shared/Payloads';
 import { captureError } from '../utils';
 import L from 'leaflet';
+import { IWaypoint } from '../../backend/app/db/models/Waypoint';
 
 export const TrailMap: FC<{
   readonly path: Path;
@@ -148,7 +149,7 @@ export const TrailMap: FC<{
                 pathId={path.id}
                 waypoint={wp}
                 key={wp.id}
-                owner={areAdding ? '' : path.owner.username} // make it so you cant edit in add mode
+                owner={areAdding ? '' : path.owner.username} // make it so you can't edit in add mode
                 onMap={true}
                 getLatLng={(waypoint: WaypointPayload) => {
                   setAreEditing(true);
@@ -208,6 +209,27 @@ export const TrailMap: FC<{
           </ModalBody>
         </Modal>
       )}
+      {path.waypoints.map((wp) => (
+        <>
+          <WaypointCard
+            refresh={refresh}
+            pathId={path.id}
+            waypoint={wp}
+            key={wp.id}
+            owner={areAdding ? '' : path.owner.username} // make it so you can't edit in add mode
+            onMap={true}
+            getLatLng={(waypoint: WaypointPayload) => {
+              setAreEditing(true);
+              setAreAdding(false);
+              setWid(wp.id);
+              setName(waypoint.name);
+              if (waypoint.description) {
+                setDescription(waypoint.description);
+              }
+            }}
+          />
+        </>
+      ))}
     </>
   );
 };
