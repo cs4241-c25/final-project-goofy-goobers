@@ -21,7 +21,6 @@ by Team Goofy Goobers:
 5. Navigate to http://localhost:8082/ and enjoy a hot-reloadable backend and frontend.
 
 ## Deployment
-
 Current production deployment is on a single EC2 instance with NGINX proxying traffic two ways:
 1. ``/api`` calls are directed to the Express application running on port ``8080``.
 2. All other traffic is statically served the ``index.html`` file found in ``dist/frontend`` upon building.
@@ -36,7 +35,7 @@ Current production deployment is on a single EC2 instance with NGINX proxying tr
 The server will begin at port ``8081``, or whatever your ``PORT`` environment variable is set to, and connect to the MongoDB at ``localhost`` or the URI provided in the ``MONGO_URI`` environment variable.
 
 ## Proprietary Documentation
-This repository interacts with Express in a unique way, and is structured particularly. For more information, review docs available in `docs`.
+This repository interacts with Express in a unique way, and is structured in a particular way. For more information, review docs available in `docs`.
 
 ## Technologies
 
