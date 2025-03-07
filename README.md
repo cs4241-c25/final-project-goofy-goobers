@@ -18,7 +18,7 @@ by Team Goofy Goobers:
 2. Run ``npm install``.
 3. Start up a MongoDB instance locally. If you want to use a remote instance, set the ``MONGO_URI`` environment variable appropriately.
 4. Run ``npm run start:fe``, open a new terminal, and run ``npm run start:be:watch`` there.
-5. Navigate to http://localhost:8082/ and enjoy a hot reloadable backend and frontend.
+5. Navigate to http://localhost:8082/ and enjoy a hot-reloadable backend and frontend.
 
 ## Deployment
 
