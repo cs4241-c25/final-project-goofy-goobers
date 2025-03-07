@@ -1,6 +1,11 @@
 # Trail Blazer
 
-by Team Goofy Goobers
+by Team Goofy Goobers:
+- Daniel Blatner
+- Zen Dignan
+- Sebastian Lanz
+- Zachary Medailleu
+- Gabriel Olafsson
 
 ## Get Started Developing
 
