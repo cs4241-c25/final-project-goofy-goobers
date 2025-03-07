@@ -1,4 +1,4 @@
-# Trail Blazer
+# TrailBlazer
 
 by Team Goofy Goobers:
 - Daniel Blatner
